@@ -2,8 +2,8 @@
 
 function initializeDatabase($filePath) {
     $servername = "localhost";
-    $username = "root";
-    $password = "";
+    $username = "90445313";
+    $password = "90445313";
     // Connect without specifying the database
     $conn = new mysqli($servername, $username, $password);
 
