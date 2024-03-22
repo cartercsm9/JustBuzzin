@@ -44,7 +44,7 @@ error_reporting(E_ALL);
             }
             ?>
         </select>
-        <button type="submit" style="display: inline;">Filter</button>
+        <button type="submit" style="display: inline;" id="filter">Filter</button>
     </form>
 
     <button id="myBtn">+</button>
