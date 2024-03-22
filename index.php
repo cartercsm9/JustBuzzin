@@ -44,7 +44,7 @@ function initializeDatabase($filePath) {
     $conn->close();
 }
 
-initializeDatabase(__DIR__ . '/ddl/init.sql');
+// initializeDatabase(__DIR__ . '/ddl/init.sql');
 
 ?>
 
