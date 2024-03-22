@@ -1,4 +1,5 @@
 <?php 
+ob_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -15,7 +16,7 @@ error_reporting(E_ALL);
     <?php include 'ddl/db_connect.php'; ?>
 </head>
 <body>
-
+<p>testing pulls</p>
 <div class="post-wrapper">
 
 <div class="form-group">
@@ -134,3 +135,5 @@ $(document).ready(function() {
   
 </body>
 </html>
+
+<?php ob_end_flush(); ?>
