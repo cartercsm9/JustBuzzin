@@ -1,5 +1,6 @@
 <?php
 
+
 function initializeDatabase($filePath) {
     $servername = "localhost";
     $username = "90445313";
