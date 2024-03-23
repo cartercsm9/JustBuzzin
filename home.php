@@ -16,6 +16,7 @@ error_reporting(E_ALL);
     <?php include 'ddl/db_connect.php'; ?>
 </head>
 <body>
+    <p>git pull test</p>
 <div class="post-wrapper">
 
 <div class="form-group">
