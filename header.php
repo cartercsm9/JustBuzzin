@@ -13,15 +13,7 @@ if (isset($_SESSION['loggedin'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Header</title>
-    <link rel="stylesheet" href="css/style-sheet.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
-<body>
+
 <div id="header-bar">
     <nav>
         <ul class="items">
@@ -57,5 +49,4 @@ if (isset($_SESSION['loggedin'])) {
         hidePost();
     <?php endif; ?>
 </script>
-</body>
-</html>
+

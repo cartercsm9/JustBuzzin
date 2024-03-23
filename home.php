@@ -10,12 +10,13 @@ error_reporting(E_ALL);
 <head>
     <meta charset="utf-8">
     <title>Just Buzzin</title>
-    <link rel="stylesheet" href="./css/style-sheet.css" />
+    <link rel="stylesheet" href="./css/style-sheet.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <?php include 'header.php'; ?>
+    
     <?php include 'ddl/db_connect.php'; ?>
 </head>
 <body>
+<?php include 'header.php'; ?>
     <p>git pull test</p>
 <div class="post-wrapper">
 
