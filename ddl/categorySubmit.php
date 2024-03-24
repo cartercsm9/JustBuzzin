@@ -13,18 +13,6 @@ if (isset($_POST['submitCategory'])) {
     }
 }
 
+header('Location: ../home.php');
+exit();
 ?>
-
-<!DOCTYPE html>
-<html lang=en>
-    <head>
-        <meta charset="utf-8">
-        <title>Redirecting...</title>
-    </head>
-    <body>
-        <script>
-            window.location.href = "../home.php";
-        </script>
-    </body>
-
-</html>

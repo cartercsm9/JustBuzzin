@@ -252,6 +252,11 @@ body{
     background-color: rgb(235,235,235);
     border-radius: 30px;
 }
+.form input::placeholder, .form textarea::placeholder {
+    color: grey; 
+    opacity: 1; 
+}
+
 
 legend  {
     text-align: center;

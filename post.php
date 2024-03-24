@@ -1,9 +1,4 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-error_reporting(E_ALL & ~E_NOTICE);
-
 include 'ddl/db_connect.php'; 
 
 if (isset($_GET['id'])) {
@@ -53,11 +48,14 @@ if (isset($_GET['id'])) {
     $postId = (int) $_GET['id'];
 
     // Query to select the post
-    $postQuery = "SELECT posts.*, users.display_name, categories.name AS category_name, categories.color AS category_color
-                  FROM posts 
-                  JOIN users ON posts.user_id = users.id
-                  LEFT JOIN categories ON posts.category_id = categories.id
-                  WHERE posts.id = ?";
+    $postQuery = "SELECT posts.*, users.display_name, categories.name AS category_name, categories.color AS category_color, 
+              COALESCE(SUM(post_votes.vote), 0) AS total_votes
+              FROM posts
+              JOIN users ON posts.user_id = users.id
+              LEFT JOIN categories ON posts.category_id = categories.id
+              LEFT JOIN post_votes ON posts.id = post_votes.post_id
+              WHERE posts.id = ?
+              GROUP BY posts.id, users.display_name, categories.name, categories.color";
     $stmt = $conn->prepare($postQuery);
     $stmt->bind_param("i", $postId);
     $stmt->execute();
@@ -70,9 +68,9 @@ if (isset($_GET['id'])) {
         <div class="post">
             <div style="display: flex;">
                 <div class="vote-buttons">
-                    <button>&#8679;</button>
-                    <span>VoteCount</span>
-                    <button>&#8681;</button>
+                    <button class="upvote-button" data-post-id="<?php echo $post['id']; ?>">&#8679;</button>
+                    <span id="votes-count-<?php echo $post['id']; ?>"><?php echo $post['total_votes']; ?></span>
+                    <button class="downvote-button" data-post-id="<?php echo $post['id']; ?>">&#8681;</button>
                 </div>
                 <div class="post-title">
                     <h1><?php echo htmlspecialchars($post['title']); ?></h1>
@@ -135,6 +133,9 @@ if (isset($_GET['id'])) {
 
 $conn->close();
 ?>
+
+
+<script src="./js/votelogic.js"></script>
 
 </body>
 </html>

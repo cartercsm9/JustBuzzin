@@ -17,7 +17,6 @@ error_reporting(E_ALL);
 </head>
 <body>
 <?php include 'header.php'; ?>
-    <p>git pull test</p>
 <div class="post-wrapper">
 
 <div class="form-group">
@@ -70,28 +69,34 @@ error_reporting(E_ALL);
     <?php
     if (isset($_GET['category']) && $_GET['category'] != 0) {
         $categoryId = (int) $_GET['category'];
-        $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date
-            FROM posts
-            JOIN users ON posts.user_id = users.id
-            LEFT JOIN categories ON posts.category_id = categories.id
-            WHERE categories.id = $categoryId
-            ORDER BY posts.creation_date DESC";
+        $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
+                COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
+                FROM posts
+                JOIN users ON posts.user_id = users.id
+                LEFT JOIN categories ON posts.category_id = categories.id
+                LEFT JOIN post_votes ON posts.id = post_votes.post_id
+                WHERE categories.id = $categoryId
+                GROUP BY posts.id
+                ORDER BY total_upvotes DESC, posts.creation_date DESC";
     } else {
-        $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date
-            FROM posts
-            JOIN users ON posts.user_id = users.id
-            LEFT JOIN categories ON posts.category_id = categories.id
-            ORDER BY posts.creation_date DESC";
-    }
+        $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
+                COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
+                FROM posts
+                JOIN users ON posts.user_id = users.id
+                LEFT JOIN categories ON posts.category_id = categories.id
+                LEFT JOIN post_votes ON posts.id = post_votes.post_id
+                GROUP BY posts.id
+                ORDER BY total_upvotes DESC, posts.creation_date DESC";
+    }    
     
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
             echo '<div class="post-container">
                     <div class="vote-buttons">
-                        <button>&#8679;</button>
-                        <span>VoteCount</span>
-                        <button>&#8681;</button>
+                        <button class="upvote-button" data-post-id="' . $row["id"] . '">&#8679;</button>
+                        <span id="votes-count-' . $row["id"] . '">' . $row["total_upvotes"] . '</span>
+                        <button class="downvote-button" data-post-id="' . $row["id"] . '">&#8681;</button>
                     </div>
                     <div class="post-title">
                         <a href="post.php?id=' . $row["id"] . '">
@@ -129,9 +134,7 @@ $(document).ready(function() {
 });
 </script>
 
-
-
-
+<script src="./js/votelogic.js"></script>
 <script src="./js/adjustPostWrapperPadding.js"></script>
   
 </body>

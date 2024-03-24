@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <title>Just Buzzin</title>
         <link rel="stylesheet" href="css/style-sheet.css" />
-        <script src="./js/headerfootermanager.js"></script>
     </head>
 
     <body class="register">

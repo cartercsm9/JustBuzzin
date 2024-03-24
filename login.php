@@ -4,7 +4,6 @@
         <meta charset="utf-8">
         <title>Just Buzzin</title>
         <link rel="stylesheet" href="css/style-sheet.css" />
-        <script src="./js/headerfootermanager.js"></script>
     </head>
 
     <body>
@@ -17,11 +16,11 @@
                 <legend>LOG IN</legend>
                 <p>
                     <label>Email: </label>
-                    <input type="text" name="email"  placeholder="Enter the email associated with your account" required/>
+                    <input type="text" name="email"  placeholder="Email" required/>
                 </p>
                 <p>
                     <label>Password: </label>
-                    <input type="password" name="password" placeholder="Enter the password associated with your account" required/>
+                    <input type="password" name="password" placeholder="Password" required/>
                 </p>
                 
                 <p>
