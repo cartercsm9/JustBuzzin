@@ -67,29 +67,64 @@ error_reporting(E_ALL);
 
 </div>
     <?php
-    if (isset($_GET['category']) && $_GET['category'] != 0) {
+    $searchTerm = isset($_GET['search']) ? "%" . $_GET['search'] . "%" : null;
+    if (isset($_GET['category']) && $_GET['category'] != 0 && $searchTerm) {
         $categoryId = (int) $_GET['category'];
+        // Category filter and search term are provided
         $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
                 COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
                 FROM posts
                 JOIN users ON posts.user_id = users.id
                 LEFT JOIN categories ON posts.category_id = categories.id
                 LEFT JOIN post_votes ON posts.id = post_votes.post_id
-                WHERE categories.id = $categoryId
+                WHERE categories.id = ? AND (posts.title LIKE ? OR posts.content LIKE ?)
                 GROUP BY posts.id
                 ORDER BY total_upvotes DESC, posts.creation_date DESC";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("iss", $categoryId, $searchTerm, $searchTerm);
+                $stmt->execute();
+                $result = $stmt->get_result();
+    } elseif ($searchTerm) {
+        // Only search term is provided
+        $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
+                COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
+                FROM posts
+                JOIN users ON posts.user_id = users.id
+                LEFT JOIN categories ON posts.category_id = categories.id
+                LEFT JOIN post_votes ON posts.id = post_votes.post_id
+                WHERE posts.title LIKE ? OR posts.content LIKE ?
+                GROUP BY posts.id
+                ORDER BY total_upvotes DESC, posts.creation_date DESC";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ss", $searchTerm, $searchTerm);
+                $stmt->execute();
+                $result = $stmt->get_result();
     } else {
-        $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
-                COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
-                FROM posts
-                JOIN users ON posts.user_id = users.id
-                LEFT JOIN categories ON posts.category_id = categories.id
-                LEFT JOIN post_votes ON posts.id = post_votes.post_id
-                GROUP BY posts.id
-                ORDER BY total_upvotes DESC, posts.creation_date DESC";
-    }    
+        if (isset($_GET['category']) && $_GET['category'] != 0) {
+            $categoryId = (int) $_GET['category'];
+            $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
+                    COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
+                    FROM posts
+                    JOIN users ON posts.user_id = users.id
+                    LEFT JOIN categories ON posts.category_id = categories.id
+                    LEFT JOIN post_votes ON posts.id = post_votes.post_id
+                    WHERE categories.id = $categoryId
+                    GROUP BY posts.id
+                    ORDER BY total_upvotes DESC, posts.creation_date DESC";
+                    $result = $conn->query($sql);
+        } else {
+            $sql = "SELECT posts.id, posts.title, posts.content, categories.name AS category_name, categories.color AS category_color, users.display_name, posts.creation_date,
+                    COALESCE(SUM(post_votes.vote), 0) AS total_upvotes
+                    FROM posts
+                    JOIN users ON posts.user_id = users.id
+                    LEFT JOIN categories ON posts.category_id = categories.id
+                    LEFT JOIN post_votes ON posts.id = post_votes.post_id
+                    GROUP BY posts.id
+                    ORDER BY total_upvotes DESC, posts.creation_date DESC";
+                    $result = $conn->query($sql);
+        }    
+    }
     
-    $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
             echo '<div class="post-container">
@@ -107,7 +142,6 @@ error_reporting(E_ALL);
                     <div class="post-details">
                         <span>posted by ' . htmlspecialchars($row["display_name"]) . '</span>
                         <span>' . $row["creation_date"] . '</span>
-                        <span>CommentCount</span> 
                     </div>
                 </div>';
         }
