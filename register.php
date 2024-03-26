@@ -20,25 +20,25 @@
         <fieldset class="form">
             <legend>REGISTER</legend>
             <p>
-                <input type="text" name="first_name" placeholder="First Name"/>
+                <input type="text" name="first_name" placeholder="First Name" required/>
             </p>
             <p>
-                <input type="text" name="last_name" placeholder="Last Name"/>
+                <input type="text" name="last_name" placeholder="Last Name" required/>
             </p>
             <p>
-                <input type="text" name="email" placeholder="Email"/>
+                <input type="email" name="email" placeholder="Email" required/>
             </p>
             <p>
-                <input type="password" name="password" placeholder="Password"/>
+                <input type="password" name="password" placeholder="Password" required/>
             </p>
             <p>
-                <input type="password" name="passwordTest" placeholder="Re-enter Password"/>
+                <input type="password" name="passwordTest" placeholder="Re-enter Password" required/>
             </p>
             <p>
-                <input type="text" name="displayName" placeholder="Username"/>
+                <input type="text" name="displayName" placeholder="Username" required />
             </p>
             <p>
-                <input type="date" name="date_of_birth" placeholder="Date Of Birth"/>
+                <input type="date" name="date_of_birth" placeholder="Date Of Birth" required/>
             </p>
             <p>
                 <input type="submit" class="level-1-button" />
@@ -48,5 +48,6 @@
 
         </form>
     </div>
+
     </body>
 </html>

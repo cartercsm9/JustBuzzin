@@ -9,7 +9,7 @@
 
     <body>
         <div class="login-page-container">
-        <form method = "POST" action="home.php">
+        <form method = "POST" action="./ddl/epDDL.php" >
             <fieldset class="form">
                 <legend>Edit My Account</legend>
                 <p>
@@ -19,15 +19,15 @@
                 </p>
                 <p>
                     <label>Edit email: </label>
-                    <input type="text" name="email" placeholder="Enter the new email you wish to use for your account"/>
+                    <input type="email" name="email" placeholder="Enter the current or new email for your account" required/>
                 </p>
                 <p>
                     <label>Change password: </label>
-                    <input type="password" name="password" placeholder="Enter the new password you wish to use on your account"/>
+                    <input type="password" name="password" placeholder="Enter the new password you wish to use on your account" />
                 </p>
                 <p>
                     <label>Confirm password: </label>
-                    <input type="password" name="passwordTest" placeholder="Re-enter the new password you wish to use"/>
+                    <input type="password" name="passwordTest" placeholder="Re-enter the new password you wish to use" />
                 </p>
                 <p>
                     <label>Change display name: </label>

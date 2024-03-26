@@ -24,7 +24,22 @@ require_once './ddl/db_connect.php';
 </head>
 
 <body>
-    <img src="imgs/userimg.png" class="profile-image">
+    <?php
+        // Query to get the picture from the database
+        // Removed the extra comma after 'filepath'
+        $sql = $connection->prepare("SELECT filename, filepath FROM users WHERE username = ?");
+        $sql->bind_param("s", $user);
+        $sql->execute();
+        $result = $sql->get_result();
+
+        while($row = $result->fetch_assoc()){
+            // Corrected the concatenation in the echo statement
+            // Also, added proper HTML attribute quotes
+            echo "<img src='" . $row['filepath'] . $row['filename'] . "' class='profile-image'>";
+        }
+    ?>
+
+
     <p><?php echo $user ?></p>
     
     <div class="profile-button-container">
