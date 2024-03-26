@@ -31,7 +31,7 @@ require_once './ddl/db_connect.php';
         $sql->execute();
         $result = $sql->get_result();
         while($row = $result->fetch_assoc()){
-            echo "<img src='" . $row['filepath'] . $row['filename'] . "' class='profile-image'>";
+            echo "<img src='" . "imgs/"."userimg.png" . "' class='profile-image'>";
         }
     ?>
 
