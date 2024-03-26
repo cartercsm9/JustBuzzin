@@ -7,7 +7,7 @@ if (!isset($_SESSION['loggedin'])) {
     exit("Not logged in");
 }
 
-require_once './ddl/db_connect.php';
+require_once 'db_connect.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Enable exceptions for mysqli
 
 try {
