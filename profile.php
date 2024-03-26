@@ -25,14 +25,45 @@ require_once './ddl/db_connect.php';
 
 <body>
     <?php
-        // Query to get the picture from the database
-        $sql = $conn->prepare("SELECT filename, filepath FROM users WHERE username = ?");
-        $sql->bind_param("s", $user);
-        $sql->execute();
-        $result = $sql->get_result();
-        while($row = $result->fetch_assoc()){
-            echo "<img src='" . "imgs/"."userimg.png" . "' class='profile-image'>";
+    if (isset($user)) {
+        // Prepare the SQL statement and check for errors
+        if ($stmt = $conn->prepare("SELECT filename, filepath FROM users WHERE username = ?")) {
+            // Bind parameters and execute the statement, checking for errors at each step
+            if ($stmt->bind_param("s", $user)) {
+                if ($stmt->execute()) {
+                    $result = $stmt->get_result();
+                    if ($result) {
+                        // Check if any rows are returned
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                // Assuming 'filepath' is a directory path and 'filename' is the image file's name
+                                // Adjust the 'src' attribute according to your actual file path structure
+                                echo "<img src='" . htmlspecialchars($row['filepath']) . htmlspecialchars($row['filename']) . "' class='profile-image'>";
+                            }
+                        } else {
+                            // Handle case when user exists but no image information is found
+                            echo "<img src='imgs/userimg.png' class='profile-image'>";
+                        }
+                    } else {
+                        // Handle case when query execution is successful but fetching result fails
+                        echo "Failed to fetch result: " . $conn->error;
+                    }
+                } else {
+                    // Handle errors that occur during statement execution
+                    echo "Execute failed: " . $stmt->error;
+                }
+            } else {
+                // Handle errors that occur during parameter binding
+                echo "Binding parameters failed: " . $stmt->error;
+            }
+        } else {
+            // Handle errors that occur during statement preparation
+            echo "Prepare failed: " . $conn->error;
         }
+    } else {
+        // Handle case when 'user' variable is not set
+        echo "User not specified.";
+    }
     ?>
 
 
