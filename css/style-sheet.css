@@ -445,3 +445,7 @@ select{
     text-decoration: none;
     cursor: pointer;
 }
+
+input[type="text"]::placeholder {
+    color: grey; /* or any other color */
+}

@@ -27,7 +27,7 @@ require_once './ddl/db_connect.php';
     <?php
         // Query to get the picture from the database
         // Removed the extra comma after 'filepath'
-        $sql = $connection->prepare("SELECT filename, filepath FROM users WHERE username = ?");
+        $sql = $conn->prepare("SELECT filename, filepath FROM users WHERE username = ?");
         $sql->bind_param("s", $user);
         $sql->execute();
         $result = $sql->get_result();
