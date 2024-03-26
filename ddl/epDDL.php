@@ -85,4 +85,21 @@ try {
     exit;
 } catch (mysqli_sql_exception $e) {
     // Rollback transaction in case of error
-    $conn->rollback
+    $conn->rollback();
+
+    // Log error or handle it as per your need
+    error_log('Failed to update profile: ' . $e->getMessage());
+    
+    // Redirect or display an error message
+    header('Location: ../error.php?message=Failed+to+update+profile');
+    exit;
+} catch (Exception $e) {
+    // Rollback transaction in case of error
+    $conn->rollback();
+
+    // Catch any other generic exceptions
+    error_log('Error: ' . $e->getMessage());
+    header('Location: ../error.php?message=An+unexpected+error+occurred');
+    exit;
+}
+?>
