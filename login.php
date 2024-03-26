@@ -5,7 +5,6 @@
         <title>Just Buzzin</title>
         <link rel="stylesheet" href="css/style-sheet.css" />
     </head>
-    
 
     <body>
         <div class="login-page-container">
