@@ -6,11 +6,6 @@
         <link rel="stylesheet" href="css/style-sheet.css" />
         <script src="./js/headerfootermanager.js"></script>
     </head>
-    <style>
-        input::placeholder {
-        color: grey;
-        }
-    </style>
 
     <body>
         <div class="login-page-container">

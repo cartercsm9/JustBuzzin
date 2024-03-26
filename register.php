@@ -5,11 +5,7 @@
         <title>Just Buzzin</title>
         <link rel="stylesheet" href="css/style-sheet.css" />
     </head>
-    <style>
-        input::placeholder {
-        color: grey;
-        }
-    </style>
+    
 
     <body class="register">
 
