@@ -108,7 +108,7 @@ body{
   }
 
 ::placeholder   {
-    color: white;
+    color: grey;
 }
 
 .search-button  {
