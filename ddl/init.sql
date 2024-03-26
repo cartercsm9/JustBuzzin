@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     display_name VARCHAR(50) UNIQUE NOT NULL,
     dob DATE,
-    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    filename VARCHAR(255),
+    filepath VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS categories (

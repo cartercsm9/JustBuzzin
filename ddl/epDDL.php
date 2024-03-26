@@ -1,189 +1,79 @@
 <?php
 session_start(); // Start a new session or resume the existing one
 
-if (isset($_SESSION['loggedin'])) {
-    $user = $_SESSION['username'];
-    $id = $_SESSION['id'];
+if (!isset($_SESSION['loggedin'])) {
+    // Redirect to login page or handle not logged in
+    exit("Not logged in");
 }
 
-if ($_REQUEST["email"]) {
+require_once './ddl/db_connect.php';
 
-    if($_SERVER['REQUEST_METHOD'] == "POST"){
-        //Store the username to be changed
-        $email = $_POST["email"];
-        // Prepare the SQL statement to prevent SQL injection
-        $stmt = $conn->prepare("UPDATE users SET email = ? WHERE id = ? and display_name = ?");
-        $stmt->bind_param("sis", $email, $id, $user);
-        $stmt->execute();
+$user = $_SESSION['username'];
+$id = $_SESSION['id'];
+
+// Initialize variables to hold potential updates
+$emailToUpdate = $_POST['email'] ?? null;
+$newDisplayName = $_POST['displayName'] ?? null;
+$newPassword = $_POST['password'] ?? null;
+$newPasswordTest = $_POST['passwordTest'] ?? null;
+$fileError = $_FILES['file']['error'] ?? null;
+$fileName = basename($_FILES["file"]["name"]) ?? null;
+$targetDir = "../uploads/";
+$targetPath = $targetDir . $fileName;
+
+// Start building the SQL query dynamically
+$query = "UPDATE users SET ";
+$params = [];
+$types = "";
+
+// Check and append email to the query if provided
+if ($emailToUpdate) {
+    $query .= "email = ?, ";
+    $params[] = $emailToUpdate;
+    $types .= "s";
+}
+
+// Handle file upload
+if ($fileError === 0) {
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)) {
+        $query .= "filename = ?, filepath = ?, ";
+        $params[] = $fileName;
+        $params[] = $targetPath;
+        $types .= "ss";
+    } else {
+        exit("Error moving the file.");
     }
+}
 
-}else if ($_REQUEST["email"] && $_REQUEST["newpic"]) {
+// Handle password update
+if ($newPassword && $newPassword === $newPasswordTest) {
+    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+    $query .= "password = ?, ";
+    $params[] = $hashedPassword;
+    $types .= "s";
+} elseif ($newPassword !== $newPasswordTest) {
+    exit("Passwords do not match!");
+}
 
-    //Store the username to be changed
-    $email = $_POST["email"];
-    
-    //Set the target directory for the file
-    $targetDir = "../uploads/";
+// Append display name to the query if provided
+if ($newDisplayName) {
+    $query .= "display_name = ?, ";
+    $params[] = $newDisplayName;
+    $types .= "s";
+}
 
-    //Check if there is an error in the file
-    if($_FILES['file']['error']==0){
-        //If not set the filename and target path
-        $filename = basename($_FILES["file"]["name"]);
-        $targetPath = $targetDir.$fileName;
+// Finalize the query
+$query = rtrim($query, ", ") . " WHERE id = ? AND username = ?";
+$params[] = $id;
+$params[] = $user;
+$types .= "is";
 
-        //Move the file to the directory in our project
-        if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)){
-            //Prepare and execute the query 
-            $sql="UPDATE users SET email = '$email' AND filename = '$fileName' AND filepath = '$targetPath' WHERE id = '$id' AND display_name = '$user'";
-            if($conn->query($sql) == true){
-                echo "You have successfully updated your profile";
-            }
-            else{
-                echo "Error: ".$sql."Error Details: " .$conn->error;
-            }
-        }
-        else{
-            echo"Error Moving the file";
-        }
-    }
-
-}else if ($_REQUEST["email"] && $_REQUEST["displayName"]) {
-
-    if($_SERVER['REQUEST_METHOD'] == "POST"){
-        //Store the new email and username to be updated
-        $email = $_POST["email"];
-        $newUserN = $_POST["displayName"];
-        // Prepare the SQL statement to prevent SQL injection
-        $stmt = $conn->prepare("UPDATE users SET email = ? AND display_name = ?WHERE id = ? AND display_name = ?");
-        $stmt->bind_param("ssis", $email, $newUserN, $id, $user);
-        $stmt->execute();
-    }
-
-}else if ($_REQUEST["email"] && $_REQUEST["password"] && $_REQUEST["passwordTest"]) {
-
-    if($_SERVER['REQUEST_METHOD'] == "POST"){
-        //Store the new email and username to be updated
-        $email = $_POST["email"];
-        $newPass = $_POST["displayName"];
-        $newPassT = $_POST["passwordTest"];
-
-        //Check if the new passwords match each other
-        if($newPass == $newPassT){
-            //Hash the new password and store it. 
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-            // Prepare the SQL statement to prevent SQL injection
-            $stmt = $conn->prepare("UPDATE users SET email = ? AND password = ? WHERE id = ? AND display_name = ?");
-            $stmt->bind_param("ssis", $email, $hashedPassword, $id, $user);
-            $stmt->execute(); 
-        }else{
-            echo "Passwords do not match!";
-            exit;
-        }
-
-    }
-
-}else if ($_REQUEST["email"] && $_REQUEST["newpic"] && $_REQUEST["password"]  && $_REQUEST["passwordTest"]) {
-
-    //Store the username to be changed
-    $email = $_POST["email"];
-
-    //Set the target directory for the file
-    $targetDir = "../uploads/";
-
-    $newPass = $_POST["displayName"];
-    $newPassT = $_POST["passwordTest"];
-
-    //Check if the new passwords match each other
-    if($newPass == $newPassT){
-        //Hash the new password and store it. 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        if($_FILES['file']['error']==0){
-            $filename = basename($_FILES["file"]["name"]);
-            $targetPath = $targetDir.$fileName;
-
-            if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)){
-                $sql="UPDATE users SET email = '$email' AND password = '$hashedPassword' AND filename = '$fileName' AND filepath = '$targetPath' WHERE id = '$id' AND display_name = '$user'";
-                if($conn->query($sql) == true){
-                    echo "You have successfully updated your profile";
-                }
-                else{
-                    echo "Error: ".$sql."Error Details: " .$conn->error;
-                }
-            }
-            else{
-                echo"Error Moving the file";
-            }
-        }
-    }else{
-        echo "Passwords do not match!";
-        exit;
-    }
-
-}else if ($_REQUEST["email"] && $_REQUEST["newpic"] && $_REQUEST["displayName"]) {
-
-
-    //Store the username to be changed
-    $email = $_POST["email"];
-    $newUserN = $_POST["displayName"];
-    
-    //Set the target directory for the file
-    $targetDir = "../uploads/";
-
-    if($_FILES['file']['error']==0){
-        $filename = basename($_FILES["file"]["name"]);
-        $targetPath = $targetDir.$fileName;
-
-        if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)){
-            $sql="UPDATE users SET email = '$email' AND display_name = '$newUserN' AND filename = '$fileName' AND filepath = '$targetPath' WHERE id = '$id' AND display_name = '$user'";
-            if($conn->query($sql) == true){
-                echo "You have successfully updated your profile";
-            }
-            else{
-                echo "Error: ".$sql."Error Details: " .$conn->error;
-            }
-        }
-        else{
-            echo"Error Moving the file";
-        }
-    }
-
-}else if ($_REQUEST["email"] && $_REQUEST["password"] && $_REQUEST["displayName"]  && $_REQUEST["passwordTest"] && $_REQUEST["newpic"]) {
-
-    //Store the username to be changed
-    $email = $_POST["email"];
-    $newUserN = $_POST["displayName"];
-
-    //Set the target directory for the file
-    $targetDir = "../uploads/";
-
-    $newPass = $_POST["displayName"];
-    $newPassT = $_POST["passwordTest"];
-
-    //Check if the new passwords match each other
-    if($newPass == $newPassT){
-        //Hash the new password and store it. 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        if($_FILES['file']['error']==0){
-            $filename = basename($_FILES["file"]["name"]);
-            $targetPath = $targetDir.$fileName;
-
-            if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)){
-                $sql="UPDATE users SET email = '$email' AND password = '$hashedPassword' AND display_name = '$newUserN' AND filename = '$fileName' AND filepath = '$targetPath' WHERE id = '$id' AND display_name = '$user'";
-                if($conn->query($sql) == true){
-                    echo "You have successfully updated your profile";
-                }
-                else{
-                    echo "Error: ".$sql."Error Details: " .$conn->error;
-                }
-            }
-            else{
-                echo"Error Moving the file";
-            }
-        }
-    }else{
-        echo "Passwords do not match!";
-        exit;
-    }
+// Prepare, bind, and execute the SQL statement
+$stmt = $conn->prepare($query);
+$stmt->bind_param($types, ...$params);
+if (!$stmt->execute()) {
+    echo "Error: " . $stmt->error;
+} else {
+    echo "You have successfully updated your profile";
 }
 ?>
