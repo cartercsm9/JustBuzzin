@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
     dob DATE,
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     filename VARCHAR(255) DEFAULT 'userimg.png',
-    filepath VARCHAR(255) DEFAULT '/imgs/'
+    filepath VARCHAR(255) DEFAULT 'imgs/'
 );
 
 CREATE TABLE IF NOT EXISTS categories (
