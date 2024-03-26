@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +9,5 @@
 <body>
     <p>If you are not redirected, <a href="home.php">click here to continue</a>.</p>
 
-    <script>
-        window.location.href = "home.php";
-    </script>
 </body>
 </html>
