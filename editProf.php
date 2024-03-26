@@ -19,7 +19,7 @@
                 </p>
                 <p>
                     <label>Edit email: </label>
-                    <input type="email" name="email" placeholder="Enter the current or new email for your account" required/>
+                    <input type="email" name="email" placeholder="Enter the current or new email for your account"/>
                 </p>
                 <p>
                     <label>Change password: </label>

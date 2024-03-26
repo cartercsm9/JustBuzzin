@@ -3,6 +3,7 @@ session_start(); // Start a new session or resume the existing one
 
 if (!isset($_SESSION['loggedin'])) {
     // Redirect to login page or handle not logged in
+    header('Location: ../home.php');
     exit("Not logged in");
 }
 
@@ -41,6 +42,7 @@ if ($fileError === 0) {
         $params[] = $targetPath;
         $types .= "ss";
     } else {
+        header('Location: ../home.php');
         exit("Error moving the file.");
     }
 }
@@ -52,6 +54,7 @@ if ($newPassword && $newPassword === $newPasswordTest) {
     $params[] = $hashedPassword;
     $types .= "s";
 } elseif ($newPassword !== $newPasswordTest) {
+    header('Location: ../home.php');
     exit("Passwords do not match!");
 }
 
@@ -75,5 +78,7 @@ if (!$stmt->execute()) {
     echo "Error: " . $stmt->error;
 } else {
     echo "You have successfully updated your profile";
+    header('Location: ../home.php');
+    exit("Success");
 }
 ?>
