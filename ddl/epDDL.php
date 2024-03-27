@@ -13,108 +13,90 @@ if (!isset($_SESSION['loggedin'])) {
 require_once 'db_connect.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+// Initial setup
 $user = $_SESSION['username'];
-$id = $_SESSION['id'];
 $emailToUpdate = $_POST['email'] ?? null;
 $newDisplayName = $_POST['displayName'] ?? null;
 $newPassword = $_POST['password'] ?? null;
 $newPasswordTest = $_POST['passwordTest'] ?? null;
-
-$imageData = null;
-$imageType = null;
 $errorMessages = [];
 
-if (isset($_FILES['newpic']) && $_FILES['newpic']['error'] === UPLOAD_ERR_OK) {
-    // Read the file's binary data
-    $tmpName = $_FILES['newpic']['tmp_name'];
-    $imageType = $_FILES['newpic']['type'];
-    $imageData = file_get_contents($tmpName);
+// Start database transaction
+$conn->begin_transaction();
 
-    if ($imageData === false) {
-        $errorMessages[] = "Error reading the file.";
-    }
-}
+try {
+    // Update profile picture if a new one is uploaded
+    if (isset($_FILES['newpic']) && $_FILES['newpic']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['newpic']['tmp_name'];
+        $imageType = $_FILES['newpic']['type'];
+        $imageData = file_get_contents($tmpName);
 
-$query = "UPDATE users SET ";
-$params = [];
-$types = "";
-
-if ($emailToUpdate) {
-    $query .= "email = ?, ";
-    $params[] = $emailToUpdate;
-    $types .= "s";
-}
-
-if ($imageData !== null) {
-    $imageQuery = "UPDATE users SET profile_pic = ?, profile_pic_type = ? WHERE id = ?";
-    $imageStmt = $conn->prepare($imageQuery);
-    // The $null variable is a workaround since the blob data is sent via send_long_data()
-    $null = NULL;
-    $imageStmt->bind_param('bss', $null, $imageType, $id);
-
-    // Open the file, read the contents into $imageData, and then send it using send_long_data()
-    if ($fp = fopen($tmpName, 'rb')) {
-        while (!feof($fp)) {
-            $chunk = fread($fp, 8192);
-            $imageStmt->send_long_data(0, $chunk);
+        if ($imageData === false) {
+            throw new Exception("Error reading the file.");
         }
-        fclose($fp);
-    } else {
-        echo "Failed to open file.";
+
+        $imageQuery = "UPDATE users SET profile_pic = ?, profile_pic_type = ? WHERE display_name = ?";
+        $imageStmt = $conn->prepare($imageQuery);
+        $null = NULL; // Placeholder for the blob
+        $imageStmt->bind_param('bss', $null, $imageType, $user);
+        $imageStmt->send_long_data(0, $imageData);
+
+        if (!$imageStmt->execute()) {
+            throw new Exception("Failed to update profile picture: " . $imageStmt->error);
+        }
     }
 
-    // Execute the prepared statement
-    if (!$imageStmt->execute()) {
-        // Handle execution error
-        echo "Execute failed: (" . $imageStmt->errno . ") " . $imageStmt->error;
-    } else {
-        // Success
-        echo "Profile updated successfully.";
+    // Prepare the base query for other user info updates
+    $query = "UPDATE users SET ";
+    $params = [];
+    $types = "";
+
+    // Conditional updates for user info
+    if ($emailToUpdate) {
+        $query .= "email = ?, ";
+        $params[] = $emailToUpdate;
+        $types .= "s";
     }
-}
 
-if ($newPassword && $newPassword === $newPasswordTest) {
-    $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-    $query .= "password = ?, ";
-    $params[] = $hashedPassword;
-    $types .= "s";
-} elseif ($newPassword && $newPassword !== $newPasswordTest) {
-    $errorMessages[] = "Passwords do not match!";
-}
+    if ($newDisplayName) {
+        $query .= "display_name = ?, ";
+        $params[] = $newDisplayName;
+        $types .= "s";
+    }
 
-if ($newDisplayName) {
-    $query .= "display_name = ?, ";
-    $params[] = $newDisplayName;
-    $types .= "s";
-}
+    if ($newPassword && $newPassword === $newPasswordTest) {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $query .= "password = ?, ";
+        $params[] = $hashedPassword;
+        $types .= "s";
+    } elseif ($newPassword && $newPassword !== $newPasswordTest) {
+        throw new Exception("Passwords do not match!");
+    }
 
-$query = rtrim($query, ", ") . " WHERE id = ?";
-$params[] = $id;
-$types .= "i";
+    // Finalize and execute the query for user info updates if there are changes
+    if (!empty($types)) {
+        $query = rtrim($query, ", ") . " WHERE display_name = ?";
+        $params[] = $user;
+        $types .= "i";
 
-if (empty($errorMessages)) {
-    try {
         $stmt = $conn->prepare($query);
-        // Dynamically bind parameters
         $stmt->bind_param($types, ...$params);
-        $stmt->execute();
 
-        // Update session variables after successful update
-        if ($emailToUpdate) {
-            $_SESSION['email'] = $emailToUpdate;
+        if (!$stmt->execute()) {
+            throw new Exception("Failed to update user info: " . $stmt->error);
         }
-        if ($newDisplayName) {
-            $_SESSION['username'] = $newDisplayName;
-        }
+    }
 
-        header('Location: ../home.php?message=Profile+updated+successfully');
-        exit;
-    } catch (mysqli_sql_exception $e) {
-        echo 'Failed to update profile: ' . $e->getMessage();
-    }
-} else {
-    foreach ($errorMessages as $message) {
-        echo "<p>Error: $message</p>";
-    }
+    // Commit transaction
+    $conn->commit();
+    $_SESSION['feedback'] = 'Profile updated successfully';
+    header('Location: ../home.php?message=' . urlencode($_SESSION['feedback']));
+    exit;
+} catch (Exception $e) {
+    $conn->rollback();
+    // Log error or handle exception
+    $_SESSION['feedback'] = $e->getMessage();
+    header('Location: ../home.php?error=' . urlencode($_SESSION['feedback']));
+    exit;
 }
 ?>
