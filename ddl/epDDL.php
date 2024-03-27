@@ -1,4 +1,11 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', '/errors/custom_error_log.txt');
+
+
 session_start();
 
 if (!isset($_SESSION['loggedin'])) {
@@ -72,11 +79,10 @@ try {
     exit;
 } catch (mysqli_sql_exception $e) {
     $conn->rollback();
-    error_log('Failed to update profile: ' . $e->getMessage());
+    error_log($e->getMessage(), 3, "/path/to/your/custom_error_log.txt");
+
 } catch (Exception $e) {
     $conn->rollback();
-    error_log('Error: ' . $e->getMessage());
-    header('Location: ../error.php?message=An+unexpected+error+occurred');
-    exit;
+    error_log($e->getMessage(), 3, "/path/to/your/custom_error_log.txt");
 }
 ?>
