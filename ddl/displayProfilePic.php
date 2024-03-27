@@ -8,15 +8,6 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once 'db_connect.php'; 
 
-// Function to serve the image content directly
-function serveImage($imageData, $imageType) {
-    if (ob_get_length()) ob_end_clean();
-    header("Content-Type: " . $imageType);
-    header('Content-Length: ' . strlen($imageData));
-
-    echo $imageData;
-    exit;
-}
 
 // Function to serve the default image
 function serveDefaultImage() {
