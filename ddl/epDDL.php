@@ -90,7 +90,7 @@ if (empty($errorMessages)) {
         $params[] = $user;
         $types .= "is";
 
-         
+         echo $types . $params;
         $stmt = $conn->prepare($query);
         $stmt->bind_param($types, ...$params);
         echo "Executing SQL: " . $stmt . "<br>";
