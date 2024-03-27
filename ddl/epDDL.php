@@ -19,20 +19,33 @@ $newDisplayName = $_POST['displayName'] ?? null;
 $newPassword = $_POST['password'] ?? null;
 $newPasswordTest = $_POST['passwordTest'] ?? null;
 
-// Adjust file handling to check if a file was uploaded and no error occurred
+// Initialize variables for file upload
 $fileName = null;
-$fileError = null;
-$targetDir = "../uploads/";
 $targetPath = null;
-if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-    $fileName = basename($_FILES["file"]["name"]);
+
+if (isset($_FILES['newpic']) && $_FILES['newpic']['error'] === UPLOAD_ERR_OK) {
+    // Original file name
+    $originalFileName = basename($_FILES['newpic']['name']);
+    // Extract the file extension
+    $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
+    
+    // Generate a unique file name to avoid overwriting existing files
+    // Example: user_profile_1234567890.jpg where 1234567890 is a timestamp
+    $uniqueSuffix = time() . '_' . rand(1000, 9999); // You can use the user's ID or any unique identifier
+    $fileName = "user_profile_" . $uniqueSuffix . "." . $fileExtension;
+    
+    $targetDir = "../uploads/";
     $targetPath = $targetDir . $fileName;
-    if (!move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)) {
+
+    if (!move_uploaded_file($_FILES['newpic']['tmp_name'], $targetPath)) {
+        // Handle failure to move the file
         $errorMessages[] = "Error moving the file.";
         $fileName = null; // Reset fileName since the move failed
     }
-} elseif (isset($_FILES['file'])) {
-    $fileError = $_FILES['file']['error'];
+} else if (isset($_FILES['newpic'])) {
+    // Handle other errors related to file upload
+    $fileError = $_FILES['newpic']['error'];
+    // Specific error handling based on the value of $fileError
 }
 
 $query = "UPDATE users SET ";
