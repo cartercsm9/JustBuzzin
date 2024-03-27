@@ -1,4 +1,5 @@
 <?php
+echo "Checkpoint 1: Before database operations<br>";
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -89,9 +90,13 @@ if (empty($errorMessages)) {
         $params[] = $user;
         $types .= "is";
 
+         echo "Executing SQL: " . $query . "<br>";
+
         $stmt = $conn->prepare($query);
         $stmt->bind_param($types, ...$params);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            echo "Error executing SQL: " . $stmt->error;
+        }
 
         $conn->commit();
         header('Location: ../home.php?message=Profile+updated+successfully');
