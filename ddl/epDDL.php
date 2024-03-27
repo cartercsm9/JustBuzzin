@@ -18,10 +18,23 @@ $emailToUpdate = $_POST['email'] ?? null;
 $newDisplayName = $_POST['displayName'] ?? null;
 $newPassword = $_POST['password'] ?? null;
 $newPasswordTest = $_POST['passwordTest'] ?? null;
-$fileError = $_FILES['file']['error'] ?? null;
-$fileName = basename($_FILES["file"]["name"]) ?? null;
+
+// Adjust file handling to check if a file was uploaded and no error occurred
+$fileName = null;
+$fileError = null;
 $targetDir = "../uploads/";
-$targetPath = $targetDir . $fileName;
+$targetPath = null;
+if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    $fileName = basename($_FILES["file"]["name"]);
+    $targetPath = $targetDir . $fileName;
+    if (!move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)) {
+        $errorMessages[] = "Error moving the file.";
+        $fileName = null; // Reset fileName since the move failed
+    }
+} elseif (isset($_FILES['file'])) {
+    $fileError = $_FILES['file']['error'];
+}
+
 $query = "UPDATE users SET ";
 $params = [];
 $types = "";
@@ -33,15 +46,11 @@ if ($emailToUpdate) {
     $types .= "s";
 }
 
-if ($fileError === 0 && $fileName) {
-    if (!move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)) {
-        $errorMessages[] = "Error moving the file.";
-    } else {
-        $query .= "filename = ?, filepath = ?, ";
-        $params[] = $fileName;
-        $params[] = $targetPath;
-        $types .= "ss";
-    }
+if ($fileName && $targetPath) {
+    $query .= "filename = ?, filepath = ?, ";
+    $params[] = $fileName;
+    $params[] = $targetPath;
+    $types .= "ss";
 }
 
 if ($newPassword && $newPassword === $newPasswordTest) {
@@ -76,12 +85,13 @@ if (empty($errorMessages)) {
         exit;
     } catch (mysqli_sql_exception $e) {
         $conn->rollback();
+        // If an exception is caught, it means there was a database or a transaction issue
         $errorMessages[] = 'Failed to update profile: ' . $e->getMessage();
     }
-}
-
-// If there are errors, display them on the page
-foreach ($errorMessages as $message) {
-    echo "<p>Error: $message</p>";
+} else {
+    // If there are errors, display them on the page
+    foreach ($errorMessages as $message) {
+        echo "<p>Error: $message</p>";
+    }
 }
 ?>
