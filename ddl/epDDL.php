@@ -1,22 +1,19 @@
 <?php
-session_start(); // Start a new session or resume the existing one
+session_start();
 
 if (!isset($_SESSION['loggedin'])) {
-    // Redirect to login page or handle not logged in
     header('Location: ../home.php');
-    exit("Not logged in");
+    exit;
 }
 
 require_once 'db_connect.php';
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT); // Enable exceptions for mysqli
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 try {
-    $conn->begin_transaction(); // Start transaction if you're making multiple updates
+    $conn->begin_transaction();
 
     $user = $_SESSION['username'];
     $id = $_SESSION['id'];
-
-    // Initialize variables to hold potential updates
     $emailToUpdate = $_POST['email'] ?? null;
     $newDisplayName = $_POST['displayName'] ?? null;
     $newPassword = $_POST['password'] ?? null;
@@ -25,20 +22,16 @@ try {
     $fileName = basename($_FILES["file"]["name"]) ?? null;
     $targetDir = "../uploads/";
     $targetPath = $targetDir . $fileName;
-
-    // Start building the SQL query dynamically
     $query = "UPDATE users SET ";
     $params = [];
     $types = "";
 
-    // Check and append email to the query if provided
     if ($emailToUpdate) {
         $query .= "email = ?, ";
         $params[] = $emailToUpdate;
         $types .= "s";
     }
 
-    // Handle file upload
     if ($fileError === 0 && $fileName) {
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetPath)) {
             $query .= "filename = ?, filepath = ?, ";
@@ -50,7 +43,6 @@ try {
         }
     }
 
-    // Handle password update
     if ($newPassword && $newPassword === $newPasswordTest) {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         $query .= "password = ?, ";
@@ -60,44 +52,31 @@ try {
         throw new Exception("Passwords do not match!");
     }
 
-    // Append display name to the query if provided
     if ($newDisplayName) {
         $query .= "display_name = ?, ";
         $params[] = $newDisplayName;
         $types .= "s";
     }
 
-    // Finalize the query
     $query = rtrim($query, ", ") . " WHERE id = ? AND username = ?";
     $params[] = $id;
     $params[] = $user;
     $types .= "is";
 
-    // Prepare, bind, and execute the SQL statement
     $stmt = $conn->prepare($query);
     $stmt->bind_param($types, ...$params);
     $stmt->execute();
 
-    $conn->commit(); // Commit transaction
-
-    // If execution is successful, redirect to home with a success message
+    $conn->commit();
     header('Location: ../home.php?message=Profile+updated+successfully');
     exit;
 } catch (mysqli_sql_exception $e) {
-    // Rollback transaction in case of error
     $conn->rollback();
-
-    // Log error or handle it as per your need
     error_log('Failed to update profile: ' . $e->getMessage());
-    
-    // Redirect or display an error message
     header('Location: ../error.php?message=Failed+to+update+profile');
     exit;
 } catch (Exception $e) {
-    // Rollback transaction in case of error
     $conn->rollback();
-
-    // Catch any other generic exceptions
     error_log('Error: ' . $e->getMessage());
     header('Location: ../error.php?message=An+unexpected+error+occurred');
     exit;
