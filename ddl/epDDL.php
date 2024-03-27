@@ -79,10 +79,10 @@ try {
     exit;
 } catch (mysqli_sql_exception $e) {
     $conn->rollback();
-    error_log($e->getMessage(), 3, "/path/to/your/custom_error_log.txt");
+    error_log($e->getMessage(), 3, "/error/error_log.txt");
 
 } catch (Exception $e) {
     $conn->rollback();
-    error_log($e->getMessage(), 3, "/path/to/your/custom_error_log.txt");
+    error_log($e->getMessage(), 3, "/error/error_log.txt");
 }
 ?>
