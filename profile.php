@@ -11,6 +11,7 @@ if(isset($_GET['filter'])){
 }
 $userId = $_SESSION['id'];
 require_once './ddl/db_connect.php';
+require_once './ddl/displayProfilePic.php'
 ?>
 
 <!DOCTYPE html>
@@ -24,37 +25,7 @@ require_once './ddl/db_connect.php';
 </head>
 
 <body>
-    <?php
-    if (isset($user)) {
-        if ($stmt = $conn->prepare("SELECT filename, filepath FROM users WHERE display_name = ?")) {
-            if ($stmt->bind_param("s", $user)) {
-                if ($stmt->execute()) {
-                    $result = $stmt->get_result();
-                    if ($result) {
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<img src='" . htmlspecialchars($row['filepath']) . htmlspecialchars($row['filename']) . "' class='profile-image'>";
-                            }
-                        } else {
-                            echo "<img src='imgs/userimg.png' class='profile-image'>";
-                        }
-                    } else {
-                        echo "Failed to fetch result: " . $conn->error;
-                    }
-                } else {
-                    echo "Execute failed: " . $stmt->error;
-                }
-            } else {
-                echo "Binding parameters failed: " . $stmt->error;
-            }
-        } else {
-            echo "Prepare failed: " . $conn->error;
-        }
-    } else {
-        echo "User not specified.";
-    }
-    ?>
-
+    <?php echo $profilePicHTML ?>
 
     <p><?php echo $user ?></p>
     

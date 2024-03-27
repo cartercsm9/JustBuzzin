@@ -1,3 +1,7 @@
+<?php 
+session_start();
+require_once './ddl/displayProfilePic.php';
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -5,6 +9,7 @@
         <title>Just Buzzin</title>
         <link rel="stylesheet" href="css/style-sheet.css" />
         <script src="./js/headerfootermanager.js"></script>
+        
     </head>
 
     <body>
@@ -13,7 +18,7 @@
             <fieldset class="form">
                 <legend>Edit My Account</legend>
                 <p>
-                    <label><img src="imgs/userimg.png" class="profile-image"></label>
+                    <label><?php echo $profilePicHTML ?></label>
                     <input type="file" name="newpic" class="level-1-button"/>
                     <p>Choose your new profile picture above</p>
                 </p>
