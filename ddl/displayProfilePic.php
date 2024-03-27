@@ -3,30 +3,50 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Assuming db_connect.php connects to your database without outputting any content
-require_once 'db_connect.php';
+require_once 'db_connect.php'; // Ensure database connection
 
-// Directly serve the image based on the condition
-if(isset($_SESSION['username']) && isset($_GET['displayImage'])) {
+// Function to serve the image content directly
+function serveImage($imageData, $imageType) {
+    header("Content-Type: " . $imageType);
+    echo $imageData;
+    exit;
+}
+
+// Function to serve the default image
+function serveDefaultImage() {
+    $defaultImagePath = 'path/to/your/default/image/userimg.png'; // Update this path
+    $imageData = file_get_contents($defaultImagePath);
+    $imageType = mime_content_type($defaultImagePath);
+    serveImage($imageData, $imageType);
+}
+
+// Check if user is logged in and a valid ID exists
+if(isset($_SESSION['id'])) {
     $userId = $_SESSION['id'];
 
+    // Prepare the query to fetch the user's profile picture
     $stmt = $conn->prepare("SELECT profile_pic, profile_pic_type FROM users WHERE id = ?");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
-    $stmt->store_result();
+    $result = $stmt->get_result();
 
-    if($stmt->num_rows > 0) {
-        $stmt->bind_result($imageData, $imageType);
-        $stmt->fetch();
-        header("Content-Type: " . $imageType);
-        echo $imageData;
+    if($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+
+        // Check if the user has a custom profile picture set
+        if(!empty($row['profile_pic']) && !empty($row['profile_pic_type'])) {
+            // Serve the user's profile picture
+            serveImage($row['profile_pic'], $row['profile_pic_type']);
+        } else {
+            // Serve the default image
+            serveDefaultImage();
+        }
     } else {
-        // Fallback to the default image if no user image is found
-        $defaultImage = '../imgs/userimg.png';
-        $imageType = mime_content_type($defaultImage);
-        header("Content-Type: " . $imageType);
-        readfile($defaultImage);
+        // No user found, or user has no profile picture, serve the default image
+        serveDefaultImage();
     }
-    exit;
+} else {
+    // User not logged in, serve the default image
+    serveDefaultImage();
 }
 ?>
