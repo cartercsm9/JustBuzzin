@@ -14,7 +14,7 @@ function serveImage($imageData, $imageType) {
 
 // Function to serve the default image
 function serveDefaultImage() {
-    $defaultImagePath = 'path/to/your/default/image/userimg.png'; // Update this path
+    $defaultImagePath = '../imgs/userimg.png'; // Update this path
     $imageData = file_get_contents($defaultImagePath);
     $imageType = mime_content_type($defaultImagePath);
     serveImage($imageData, $imageType);

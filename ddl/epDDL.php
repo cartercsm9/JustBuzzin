@@ -46,10 +46,31 @@ if ($emailToUpdate) {
 }
 
 if ($imageData !== null) {
-    $query .= "profile_pic = ?, profile_pic_type = ?, ";
-    $params[] = $imageData;
-    $params[] = $imageType;
-    $types .= "bs";
+    $imageQuery = "UPDATE users SET profile_pic = ?, profile_pic_type = ? WHERE id = ?";
+    $imageStmt = $conn->prepare($imageQuery);
+    // The $null variable is a workaround since the blob data is sent via send_long_data()
+    $null = NULL;
+    $imageStmt->bind_param('bss', $null, $imageType, $id);
+
+    // Open the file, read the contents into $imageData, and then send it using send_long_data()
+    if ($fp = fopen($tmpName, 'rb')) {
+        while (!feof($fp)) {
+            $chunk = fread($fp, 8192);
+            $imageStmt->send_long_data(0, $chunk);
+        }
+        fclose($fp);
+    } else {
+        echo "Failed to open file.";
+    }
+
+    // Execute the prepared statement
+    if (!$imageStmt->execute()) {
+        // Handle execution error
+        echo "Execute failed: (" . $imageStmt->errno . ") " . $imageStmt->error;
+    } else {
+        // Success
+        echo "Profile updated successfully.";
+    }
 }
 
 if ($newPassword && $newPassword === $newPasswordTest) {
