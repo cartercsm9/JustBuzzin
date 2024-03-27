@@ -73,8 +73,6 @@ try {
 } catch (mysqli_sql_exception $e) {
     $conn->rollback();
     error_log('Failed to update profile: ' . $e->getMessage());
-    header('Location: ../error.php?message=Failed+to+update+profile');
-    exit;
 } catch (Exception $e) {
     $conn->rollback();
     error_log('Error: ' . $e->getMessage());
