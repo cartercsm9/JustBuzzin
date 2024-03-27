@@ -1,6 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+ob_start();
+ini_set('display_errors', 0);
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -10,6 +10,7 @@ require_once 'db_connect.php';
 
 // Function to serve the image content directly
 function serveImage($imageData, $imageType) {
+    if (ob_get_length()) ob_end_clean();
     header("Content-Type: " . $imageType);
     header('Content-Length: ' . strlen($imageData));
 
@@ -19,6 +20,7 @@ function serveImage($imageData, $imageType) {
 
 // Function to serve the default image
 function serveDefaultImage() {
+    if (ob_get_length()) ob_end_clean();
     $imageData = file_get_contents('../imgs/userimg.png');
     $imageType = 'image/png';
     
