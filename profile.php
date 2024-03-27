@@ -11,7 +11,6 @@ if(isset($_GET['filter'])){
 }
 $userId = $_SESSION['id'];
 require_once './ddl/db_connect.php';
-require_once './ddl/displayProfilePic.php'
 ?>
 
 <!DOCTYPE html>

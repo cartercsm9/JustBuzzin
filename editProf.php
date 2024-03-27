@@ -1,6 +1,5 @@
 <?php 
 session_start();
-require_once './ddl/displayProfilePic.php';
 ?>
 <!DOCTYPE html>
 <html>

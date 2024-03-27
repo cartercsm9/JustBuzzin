@@ -11,7 +11,6 @@ if (isset($_SESSION['loggedin'])) {
     $profileLink = "login.php";
     $hidePost = true;
 }
-require_once './ddl/displayProfilePic.php'
 ?>
 
 
