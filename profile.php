@@ -24,7 +24,7 @@ require_once './ddl/db_connect.php';
 </head>
 
 <body>
-<img src="displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image">
+<img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image">
 
     <p><?php echo $user ?></p>
     

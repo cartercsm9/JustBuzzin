@@ -2,14 +2,10 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Rest of your script...
 
-require_once 'db_connect.php'; // Ensure this path accurately points to your database connection script
-
-// Set header for content type to html as default
+require_once 'db_connect.php';
 header('Content-Type: text/html; charset=utf-8');
 
-// Function to show the image tag or output the image
 function displayImage($imgSrc = 'imgs/userimg.png', $isBlob = false, $blobType = '') {
     if (!$isBlob) {
         // If not blob, return the image tag
@@ -22,7 +18,7 @@ function displayImage($imgSrc = 'imgs/userimg.png', $isBlob = false, $blobType =
     }
 }
 
-// Check if the user is logged in and a specific image display is not requested
+// Check if the user is lFogged in and a specific image display is not requested
 if(isset($_SESSION['username']) && !isset($_GET['displayImage'])) {
     $userId = $_SESSION['id'];
 

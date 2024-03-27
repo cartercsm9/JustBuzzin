@@ -17,7 +17,7 @@ session_start();
             <fieldset class="form">
                 <legend>Edit My Account</legend>
                 <p>
-                    <label><img src="displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></label>
+                    <label><img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></label>
                     <input type="file" name="newpic" class="level-1-button"/>
                     <p>Choose your new profile picture above</p>
                 </p>
