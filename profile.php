@@ -25,7 +25,7 @@ require_once './ddl/displayProfilePic.php'
 </head>
 
 <body>
-    <?php echo $profilePicHTML ?>
+<img src="displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image">
 
     <p><?php echo $user ?></p>
     

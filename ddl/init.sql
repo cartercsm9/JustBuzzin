@@ -11,9 +11,10 @@ CREATE TABLE IF NOT EXISTS users (
     display_name VARCHAR(50) UNIQUE NOT NULL,
     dob DATE,
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    filename VARCHAR(255) DEFAULT 'userimg.png',
-    filepath VARCHAR(255) DEFAULT 'imgs/'
+    profile_pic BLOB,  -- This column will store the binary data of the image
+    profile_pic_type VARCHAR(50)  -- This stores the MIME type of the image, e.g., 'image/jpeg'
 );
+
 
 CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,

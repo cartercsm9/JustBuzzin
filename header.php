@@ -26,7 +26,7 @@ require_once './ddl/displayProfilePic.php'
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
             </div>
             <button type="button" class="level-2-button" id="new-post">New Post</button>
-            <a href="<?php echo $profileLink; ?>" style="width:100px; margin:0px;"><?php echo $profilePicHTML ?></a>
+            <a href="<?php echo $profileLink; ?>" style="width:100px; margin:0px;"><img src="displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></a>
         </ul>
     </nav>
     </form>

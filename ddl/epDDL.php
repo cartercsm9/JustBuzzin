@@ -20,21 +20,18 @@ $newDisplayName = $_POST['displayName'] ?? null;
 $newPassword = $_POST['password'] ?? null;
 $newPasswordTest = $_POST['passwordTest'] ?? null;
 
-$fileName = null;
-$targetPath = null;
+$imageData = null;
+$imageType = null;
 $errorMessages = [];
 
 if (isset($_FILES['newpic']) && $_FILES['newpic']['error'] === UPLOAD_ERR_OK) {
-    $originalFileName = basename($_FILES['newpic']['name']);
-    $fileExtension = pathinfo($originalFileName, PATHINFO_EXTENSION);
-    $uniqueSuffix = time() . '_' . rand(1000, 9999);
-    $fileName = "user_profile_" . $uniqueSuffix . "." . $fileExtension;
-    $targetDir = "../uploads/";
-    $targetPath = $targetDir . $fileName;
+    // Read the file's binary data
+    $tmpName = $_FILES['newpic']['tmp_name'];
+    $imageType = $_FILES['newpic']['type'];
+    $imageData = file_get_contents($tmpName);
 
-    if (!move_uploaded_file($_FILES['newpic']['tmp_name'], $targetPath)) {
-        $errorMessages[] = "Error moving the file.";
-        $fileName = null;
+    if ($imageData === false) {
+        $errorMessages[] = "Error reading the file.";
     }
 }
 
@@ -48,10 +45,11 @@ if ($emailToUpdate) {
     $types .= "s";
 }
 
-if ($fileName) {
-    $query .= "filename = ?";
-    $params[] = $fileName;
-    $types .= "s";
+if ($imageData !== null) {
+    $query .= "profile_pic = ?, profile_pic_type = ?, ";
+    $params[] = $imageData;
+    $params[] = $imageType;
+    $types .= "bs";
 }
 
 if ($newPassword && $newPassword === $newPasswordTest) {
@@ -69,14 +67,14 @@ if ($newDisplayName) {
     $types .= "s";
 }
 
+$query = rtrim($query, ", ") . " WHERE id = ?";
+$params[] = $id;
+$types .= "i";
+
 if (empty($errorMessages)) {
     try {
-        $conn->begin_transaction();
-        $query = rtrim($query, ", ") . " WHERE id = ?";
-        $params[] = $id;
-        $types .= "i";
-
         $stmt = $conn->prepare($query);
+        // Dynamically bind parameters
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
 
@@ -87,15 +85,10 @@ if (empty($errorMessages)) {
         if ($newDisplayName) {
             $_SESSION['username'] = $newDisplayName;
         }
-        if ($fileName) {
-            $_SESSION['profilePic'] = './uploads/' . $fileName;
-        }
 
-        $conn->commit();
         header('Location: ../home.php?message=Profile+updated+successfully');
         exit;
     } catch (mysqli_sql_exception $e) {
-        $conn->rollback();
         echo 'Failed to update profile: ' . $e->getMessage();
     }
 } else {

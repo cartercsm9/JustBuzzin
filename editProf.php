@@ -18,7 +18,7 @@ require_once './ddl/displayProfilePic.php';
             <fieldset class="form">
                 <legend>Edit My Account</legend>
                 <p>
-                    <label><?php echo $profilePicHTML ?></label>
+                    <label><img src="displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></label>
                     <input type="file" name="newpic" class="level-1-button"/>
                     <p>Choose your new profile picture above</p>
                 </p>
