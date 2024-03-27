@@ -3,27 +3,14 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Assuming db_connect.php connects to your database without outputting any content
 require_once 'db_connect.php';
-header('Content-Type: text/html; charset=utf-8');
 
-function displayImage($imgSrc = 'imgs/userimg.png', $isBlob = false, $blobType = '') {
-    if (!$isBlob) {
-        // If not blob, return the image tag
-        return "<img src='" . htmlspecialchars($imgSrc) . "' class='profile-image'>";
-    } else {
-        // If blob, output the correct headers and the image data
-        header("Content-Type: " . $blobType);
-        echo $imgSrc;
-        exit; // Stop script to prevent outputting further HTML
-    }
-}
-
-// Check if the user is lFogged in and a specific image display is not requested
-if(isset($_SESSION['username']) && !isset($_GET['displayImage'])) {
+// Directly serve the image based on the condition
+if(isset($_SESSION['username']) && isset($_GET['displayImage'])) {
     $userId = $_SESSION['id'];
 
-    $query = "SELECT profile_pic, profile_pic_type FROM users WHERE id = ?";
-    $stmt = $conn->prepare($query);
+    $stmt = $conn->prepare("SELECT profile_pic, profile_pic_type FROM users WHERE id = ?");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $stmt->store_result();
@@ -31,17 +18,15 @@ if(isset($_SESSION['username']) && !isset($_GET['displayImage'])) {
     if($stmt->num_rows > 0) {
         $stmt->bind_result($imageData, $imageType);
         $stmt->fetch();
-
-        // Call function to output the image
-        echo displayImage($imageData, true, $imageType);
+        header("Content-Type: " . $imageType);
+        echo $imageData;
     } else {
-        // Display default image if no profile picture is found
-        echo displayImage();
+        // Fallback to the default image if no user image is found
+        $defaultImage = '../imgs/userimg.png';
+        $imageType = mime_content_type($defaultImage);
+        header("Content-Type: " . $imageType);
+        readfile($defaultImage);
     }
-} else {
-    // Display default image if not logged in or for direct script access without proper session
-    echo displayImage();
+    exit;
 }
-
-// Additional HTML content can go here if needed, but will be ignored for blob output
 ?>
