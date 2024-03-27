@@ -1,5 +1,9 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+// Rest of your script...
+
 require_once 'db_connect.php'; // Ensure this path accurately points to your database connection script
 
 // Set header for content type to html as default
