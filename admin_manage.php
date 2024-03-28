@@ -50,7 +50,6 @@ $result = $conn->query($query);
                 <td><?= htmlspecialchars($row['email']) ?></td>
                 <td><?= $row['post_count'] ?></td>
                 <td>
-                    <!-- Add a query parameter for deletion with the user's ID -->
                     <a href="?deleteUserId=<?= $row['id'] ?>" onclick="return confirm('Are you sure?');">Remove</a>
                 </td>
             </tr>
