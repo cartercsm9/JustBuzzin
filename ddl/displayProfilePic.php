@@ -11,12 +11,10 @@ require_once 'db_connect.php';
 
 // Function to serve the default image
 function serveDefaultImage() {
-    if (ob_get_length()) ob_end_clean();
-    $imageData = file_get_contents('../imgs/userimg.png');
-    $imageType = 'image/png';
-    
-    header("Content-Type: " . $imageType);
-    echo $imageData;
+    $defaultImagePath = '../imgs/userimg.png';
+    $imageType = mime_content_type($defaultImagePath);
+    header('Content-Type: ' . $imageType); 
+    readfile($defaultImagePath);
     exit;
 }
 
@@ -30,19 +28,19 @@ if(isset($_SESSION['id'])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if($result->num_rows > 0) {
-        if($row != null){
-            $row = $result->fetch_assoc();
-
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        
+        if (!empty($row['profile_pic']) && !empty($row['profile_pic_type'])) {
             header("Content-Type: " . $row['profile_pic_type']);
             echo $row['profile_pic'];
-        }else{
+        } else {
             serveDefaultImage();
         }
     } else {
-        // No user found, or user has no profile picture, serve the default image
         serveDefaultImage();
     }
+    
 } else {
     // User not logged in, serve the default image
     serveDefaultImage();

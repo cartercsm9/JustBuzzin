@@ -11,8 +11,9 @@ CREATE TABLE IF NOT EXISTS users (
     display_name VARCHAR(50) UNIQUE NOT NULL,
     dob DATE,
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    profile_pic BLOB,  -- This column will store the binary data of the image
-    profile_pic_type VARCHAR(50)  -- This stores the MIME type of the image, e.g., 'image/jpeg'
+    profile_pic BLOB,  
+    profile_pic_type VARCHAR(50),
+    admin TINYINT(1) NOT NULL DEFAULT 0
 );
 
 

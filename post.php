@@ -1,6 +1,7 @@
 <?php
-include 'ddl/db_connect.php'; 
 
+include 'ddl/db_connect.php'; 
+include 'header.php';
 if (isset($_GET['id'])) {
     $postId = (int) $_GET['id'];
 }
@@ -53,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
     <meta charset="utf-8">
     <title>Post</title>
     <link rel="stylesheet" href="css/style-sheet.css" />
-    <?php include 'header.php'; ?>
+    
 </head>
 <body>
 

@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     // Prepare the SQL statement to prevent SQL injection
-    $stmt = $conn->prepare("SELECT id, password,display_name FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT id, password,display_name,admin FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $hashed_password, $display_name);
+        $stmt->bind_result($id, $hashed_password, $display_name,$admin);
         $stmt->fetch();
 
         // Verify the password against the hash
@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['id'] = $id;
             $_SESSION['email'] = $email;
             $_SESSION['username'] = $display_name;
+            $_SESSION['admin'] = $admin;
 
             // Redirect user to home page
             header("location: ../home.php");

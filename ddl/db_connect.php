@@ -1,9 +1,9 @@
 <?php
 // Database credentials
 $servername = "localhost";
-$username = "90445313";
-$dbpassword = "90445313";
-$dbname = "db_90445313";
+$username = "root";
+$dbpassword = "";
+$dbname = "justbuzzin";
 
 // Create database connection
 $conn = new mysqli($servername, $username, $dbpassword, $dbname);
@@ -13,5 +13,3 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
-?>

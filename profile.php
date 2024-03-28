@@ -31,7 +31,11 @@ require_once './ddl/db_connect.php';
     <div class="profile-button-container">
     <a href="home.php"><button class="level-2-button">Home</button></a>
     <a href="editProf.php"><button class="level-2-button">Edit profile</button></a>
-    
+    <?php 
+    if($_SESSION['admin'] == 1){
+        echo '<a href="admin_manage.php"><button class="level-2-button">Admin</button></a>';
+    }
+    ?>
     <form id="logoutForm" action="ddl/logout.php" method="POST">
     <button type="submit" id="logoutButton" class="level-2-button">Logout</button>
     </form>
