@@ -7,26 +7,42 @@ if (isset($_GET['id'])) {
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
-    $userId = $_SESSION['id']; 
-    $commentContent = trim($_POST['comment']);
-    $postId = isset($_POST['postId']) ? (int)$_POST['postId'] : 0; 
-
-    // Prepare and bind
-    $stmt = $conn->prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)");
-    $stmt->bind_param("iis", $postId, $userId, $commentContent);
-    
-    // Execute
-    if ($stmt->execute()) {
-        echo "Comment added successfully.";
-    } else {
-        echo "Error: " . $stmt->error;
+    // Assuming session_start() has been called earlier in your script
+    if (!isset($_SESSION['id'])) {
+        echo "<script>console.error('Session ID not set. User must be logged in to comment.');</script>";
+        exit; // Or handle this scenario appropriately
     }
 
-    $stmt->close();
-    // Redirect back to the same page to avoid form resubmission issues
-    header("Location: post.php?id=" . $postId);
-    exit();
+    $userId = $_SESSION['id'];
+    $commentContent = trim($_POST['comment']);
+    $postId = isset($_POST['postId']) ? (int)$_POST['postId'] : 0;
+
+    if (empty($commentContent)) {
+        echo "<script>console.error('Comment content is empty.');</script>";
+    } elseif ($postId <= 0) {
+        echo "<script>console.error('Post ID is invalid.');</script>";
+    } else {
+        $stmt = $conn->prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)");
+        if ($stmt === false) {
+            echo "<script>console.error('Prepare statement failed: " . htmlspecialchars(json_encode($conn->error)) . "');</script>";
+            exit; // Or handle this scenario appropriately
+        }
+
+        $stmt->bind_param("iis", $postId, $userId, $commentContent);
+
+        if (!$stmt->execute()) {
+            echo "<script>console.error('Execute failed: " . htmlspecialchars(json_encode($stmt->error)) . "');</script>";
+        } else {
+            echo "<script>console.log('Comment added successfully.');</script>";
+            // Redirect to prevent form resubmission
+            echo "<script>location.href = 'post.php?id=" . $postId . "'</script>";
+            exit;
+        }
+
+        $stmt->close();
+    }
 }
+
 ?>
 
 
