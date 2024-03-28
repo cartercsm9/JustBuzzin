@@ -31,10 +31,14 @@ if(isset($_SESSION['id'])) {
     $result = $stmt->get_result();
 
     if($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
+        if($row != null){
+            $row = $result->fetch_assoc();
 
-        header("Content-Type: " . $row['profile_pic_type']);
-        echo $row['profile_pic'];
+            header("Content-Type: " . $row['profile_pic_type']);
+            echo $row['profile_pic'];
+        }else{
+            serveDefaultImage();
+        }
     } else {
         // No user found, or user has no profile picture, serve the default image
         serveDefaultImage();

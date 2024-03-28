@@ -38,7 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
     <title>Post</title>
     <link rel="stylesheet" href="css/style-sheet.css" />
     <?php include 'header.php'; ?>
-    <?php include 'ddl/db_connect.php';  ?>
 </head>
 <body>
 
