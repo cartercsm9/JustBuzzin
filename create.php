@@ -40,9 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="title">Title</label>
             <input type="text" id="title" name="title" required>
         </div>
+        <br/>
         <div class="form-group">
             <textarea id="content" name="content" required></textarea>
         </div>
+        </br>
         <div class="form-group">
             <label for="category">Category</label>
             <select id="category" name="category">
@@ -64,7 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ?>
             </select>
         </div>
-        <button type="submit" class="level-1-button">Submit Post</button>
+            </br>
+        <button type="submit" class="level-2-button">Submit Post</button>
     </form>
 </div>
 
