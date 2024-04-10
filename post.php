@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
         $stmt = $conn->prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)");
         if ($stmt === false) {
             echo "<script>console.error('Prepare statement failed: " . htmlspecialchars(json_encode($conn->error)) . "');</script>";
-            exit; // Or handle this scenario appropriately
+            exit;
         }
 
         $stmt->bind_param("iis", $postId, $userId, $commentContent);
@@ -96,11 +96,30 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
-            <p class="post-text">
-                <?php
-                $processed_content = str_replace("\\r\\n", "\n", $post['content']);
-                echo "<p>".nl2br(htmlspecialchars($processed_content))."</p>"; ?>
-            </p>
+            
+            <?php                
+                // Assuming $post['content'] contains the problematic URL
+                $processed_content = $post['content'];
+
+                // Decode HTML entities and remove backslashes
+                $processed_content = html_entity_decode($processed_content);
+                $processed_content = stripslashes($processed_content);
+                $processed_content = str_replace('rn', '', $processed_content);
+
+                // Display the processed content
+                echo "<div class='post-text'>" . $processed_content . "</div>";
+
+            ?>
+
+            
+        <?php
+            if (isset($_SESSION['id']) && $_SESSION['id'] == $post['user_id']) {
+                echo '<form action="ddl/deletePost.php" method="POST" onsubmit="return confirmDeletion();">';
+                echo '<input type="hidden" name="postId" value="' . $post['id'] . '">';
+                echo '<button type="submit" name="delete_post" id="showStats">Delete</button>';
+                echo '</form>';
+            }
+        ?>
         </div>
 
 
@@ -153,7 +172,11 @@ if (isset($_GET['id'])) {
 $conn->close();
 ?>
 
-
+<script>
+    function confirmDeletion() {
+        return confirm("Are you sure you want to delete this post?");
+    }
+ </script>
 <script src="./js/votelogic.js"></script>
 
 </body>

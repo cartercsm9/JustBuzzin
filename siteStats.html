@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Site Statistics</title>
+    <link rel="stylesheet" href="./css/style-sheet.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="categoryPopup" class="popup">
+        <button class="popup-close-btn">Close</button>
+        <h1>Site Statistics</h1>
+        <div>
+            <h2>Active Users</h2>
+            <canvas id="activeUsersChart"></canvas>
+        </div>
+        <div>
+            <h2>Hot Threads</h2>
+            <canvas id="hotThreadsChart"></canvas>
+        </div>
+        <div>
+            <h2>User Registration Over Time</h2>
+            <canvas id="userRegistrationChart"></canvas>
+        </div>
+        <div>
+            <h2>Most Popular Categories</h2>
+            <canvas id="popularCategoriesChart"></canvas>
+        </div>
+        <div>
+            <h2>Site Activity By Date</h2>
+            <canvas id="siteActivityChart"></canvas>
+        </div>
+        <script src="./js/chart.js"></script>
+    </div>
+</body>
+
+</html>
+

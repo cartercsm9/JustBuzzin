@@ -1,5 +1,5 @@
 <?php
-require 'ddl/db_connect.php'; // Adjust this path as necessary
+require 'ddl/db_connect.php';
 
 // Check if a request to delete a user has been made
 if (isset($_GET['deleteUserId'])) {

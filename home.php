@@ -17,53 +17,57 @@ error_reporting(E_ALL);
 </head>
 <body>
 <?php include 'header.php'; ?>
+<?php include 'siteStats.html'; ?>
 <div class="post-wrapper">
 
 <div class="form-group">
-    <form action="" method="get" style="display:inline;">
-        <label for="category">Category</label>
-        <select id="category" name="category">
-            <option value="0">Select a category</option>
-            <?php
-            // SQL to select all categories
-            $sql = "SELECT id, name FROM categories ORDER BY name";
-            $result = $conn->query($sql);
+    <div class="selection-bar">
+        <button type="button" id="showStats">Insights and Hot Posts</button>
 
-            // Retrieve the selected category ID from the URL parameter (if any)
-            $selectedCategoryId = isset($_GET['category']) ? (int)$_GET['category'] : null;
+        <form action="" method="get" style="display:inline;">
+            <select id="category" name="category">
+                <option value="0">Select a category</option>
+                <?php
+                // SQL to select all categories
+                $sql = "SELECT id, name FROM categories ORDER BY name";
+                $result = $conn->query($sql);
 
-            // Check if there are any results
-            if ($result->num_rows > 0) {
-                // Output data of each row
-                while($row = $result->fetch_assoc()) {
-                    // Determine if this option should be marked as selected
-                    $selected = ($row["id"] == $selectedCategoryId) ? 'selected' : '';
-                    echo '<option value="' . $row["id"] . '" ' . $selected . '>' . htmlspecialchars($row["name"]) . '</option>';
+                // Retrieve the selected category ID from the URL parameter (if any)
+                $selectedCategoryId = isset($_GET['category']) ? (int)$_GET['category'] : null;
+
+                // Check if there are any results
+                if ($result->num_rows > 0) {
+                    // Output data of each row
+                    while($row = $result->fetch_assoc()) {
+                        // Determine if this option should be marked as selected
+                        $selected = ($row["id"] == $selectedCategoryId) ? 'selected' : '';
+                        echo '<option value="' . $row["id"] . '" ' . $selected . '>' . htmlspecialchars($row["name"]) . '</option>';
+                    }
+                } else {
+                    echo '<option value="0">No categories found</option>';
                 }
-            } else {
-                echo '<option value="0">No categories found</option>';
-            }
-            ?>
-        </select>
-        <button type="submit" style="display: inline;" id="filter">Filter</button>
-    </form>
-
-    <button id="myBtn">+</button>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <form action="./ddl/categorySubmit.php" method="post">
-                <h2>Add New Category</h2>
-                <label for="categoryName">Name:</label>
-                <input type="text" id="categoryName" name="categoryName" required><br><br>
-                <label for="categoryDescription">Description:</label>
-                <textarea id="categoryDescription" name="categoryDescription" rows="4" cols="50"></textarea><br><br>
-                <label for="categoryColor">Color: </label>
-                <input type="color" id="categoryColor" name="categoryColor" required><br><br>
-                <button type="submit" name="submitCategory">Add Category</button>
-            </form>
-        </div>
+                ?>
+            </select>
+            <button type="submit" style="display: inline;" id="filter">Filter</button>
+            <button type="button" id="myBtn">Create Categroy</button>
+        </form>
     </div>
+    <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form action="./ddl/categorySubmit.php" method="post">
+                    <h2>Add New Category</h2>
+                    <label for="categoryName">Name:</label>
+                    <input type="text" id="categoryName" name="categoryName" required><br><br>
+                    <label for="categoryDescription">Description:</label>
+                    <textarea id="categoryDescription" name="categoryDescription" rows="4" cols="50"></textarea><br><br>
+                    <label for="categoryColor">Color: </label>
+                    <input type="color" id="categoryColor" name="categoryColor" required><br><br>
+                    <button type="submit" name="submitCategory">Add Category</button>
+                </form>
+            </div>
+        </div>
+    
 
 </div>
     <?php
@@ -163,6 +167,18 @@ $(document).ready(function() {
     $(window).click(function(event) {
         if ($(event.target).is("#myModal")) {
             $("#myModal").hide();
+        }
+    });
+    
+    $("#showStats").click(function() {
+        $("#categoryPopup").show();
+    });
+    $(".popup-close-btn").click(function() {
+        $("#categoryPopup").hide();
+    });
+    $(window).click(function(event) {
+        if ($(event.target).is("#categoryPopup")) {
+            $("#categoryPopup").hide();
         }
     });
 });

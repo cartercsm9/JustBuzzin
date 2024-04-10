@@ -20,14 +20,20 @@ require_once './ddl/db_connect.php';
     <title>Just Buzzin</title>
     <link rel="stylesheet" href="css/style-sheet.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <style>
+        #profileUsername{
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body>
     <img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image">
+    <div id="profileUsername">
+        <p><?php echo $user ?></p>
+    </div>
 
-    <p><?php echo $user ?></p>
-    
     <div class="profile-button-container">
     <a href="home.php"><button class="level-2-button">Home</button></a>
     <a href="editProf.php"><button class="level-2-button">Edit profile</button></a>

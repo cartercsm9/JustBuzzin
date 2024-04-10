@@ -31,10 +31,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Create Post</title>
     <link rel="stylesheet" href="css/style-sheet.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/irg2l8zpaoxlgwq5z103ghjkk91vnte0gxnrv5yiz5ngl2ud/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+    tinymce.init({
+        selector: '#content',
+        plugins: 'link image code',
+        toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | code',
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();
+            });
+        }
+    });
+    </script>
+
     <style>
         .level-2-button{
             margin: 10px 5px;
             padding: 10px;
+        }
+        #content{
+            height:80vh;
         }
     </style>
 </head>
@@ -77,10 +94,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit" class="level-2-button">Submit Post</button>
     </form>
 </div>
-
-<script>
-    
-</script>
-
 </body>
 </html>
