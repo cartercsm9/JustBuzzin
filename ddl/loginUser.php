@@ -35,10 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             // Password is not valid, display an error message
             echo "The password you entered was not valid.";
+            echo "<a href='../login.php'>Login</a>";
         }
     } else {
         // Email doesn't exist, display an error message
         echo "No account found with that email.";
+        echo "<a href='../login.php'>Login</a>";
     }
 
     $stmt->close();

@@ -10,8 +10,8 @@ if (isset($_GET['id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
     // Assuming session_start() has been called earlier in your script
     if (!isset($_SESSION['id'])) {
-        echo "<script>console.error('Session ID not set. User must be logged in to comment.');</script>";
-        exit; // Or handle this scenario appropriately
+        echo "<p>console.error('Session ID not set. User must be logged in to comment.');</p>";
+        header("Location: login.php");
     }
 
     $userId = $_SESSION['id'];
@@ -82,6 +82,7 @@ if (isset($_GET['id'])) {
         ?>
         
         <div class="post">
+        
             <div style="display: flex;">
                 <div class="vote-buttons">
                     <button class="upvote-button" data-post-id="<?php echo $post['id']; ?>">&#8679;</button>
@@ -96,14 +97,16 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
             <p class="post-text">
-                <?php echo nl2br(htmlspecialchars($post['content'])); ?>
+                <?php
+                $processed_content = str_replace("\\r\\n", "\n", $post['content']);
+                echo "<p>".nl2br(htmlspecialchars($processed_content))."</p>"; ?>
             </p>
         </div>
 
 
         <div class="comments">
         <form action="" method="POST">
-            <textarea id="comment-box" name="comment" rows="4" cols="50" placeholder="Leave a Comment"></textarea>
+            <textarea id="comment-box" name="comment" rows="4" cols="50" placeholder="Leave a Comment" required></textarea>
             <input type="hidden" name="postId" value="<?php echo $postId; ?>">
             <button type="submit" name="submit_comment">Post Comment</button>
         </form>

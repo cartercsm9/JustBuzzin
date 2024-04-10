@@ -31,10 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Create Post</title>
     <link rel="stylesheet" href="css/style-sheet.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .level-2-button{
+            margin: 10px 5px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="post">
+<div class="post" style="margin-top:50px;">
+    <a href="home.php"><button class="level-2-button">Home</button></a>
     <form action="" method="post">
         <div class="form-group">
             <label for="title">Title</label>
@@ -47,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </br>
         <div class="form-group">
             <label for="category">Category</label>
-            <select id="category" name="category">
+            <select id="category" name="category" required>
                 <option value="">Select a category</option>
                 <?php
                 // SQL to select all categories
