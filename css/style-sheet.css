@@ -266,6 +266,20 @@ legend  {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*register page CSS*/
 
 
@@ -327,15 +341,18 @@ legend  {
 }
 
 /*This modifies the placeholder text of the input fields on the registration page*/
+/*for the text input placeholder*/
 .register-form-input input[type=text]::placeholder {
     color: black;
     font-family: Helvetica;
 }
+/*for the email input placeholder*/
 .register-form-input input[type=email]::placeholder {
     color: black;
     font-family: Helvetica;
 
 }
+/*for the password input placeholder*/
 .register-form-input input[type=password]::placeholder {
     color: black;
     font-family: Helvetica;
@@ -378,6 +395,14 @@ legend  {
 }
 
 /*END OF REGISTRATION STYLING*/
+
+
+
+
+
+
+
+
 
 
 
