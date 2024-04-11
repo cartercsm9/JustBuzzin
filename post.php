@@ -10,8 +10,8 @@ if (isset($_GET['id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
     // Assuming session_start() has been called earlier in your script
     if (!isset($_SESSION['id'])) {
-        echo "<script>console.error('Session ID not set. User must be logged in to comment.');</script>";
-        exit; // Or handle this scenario appropriately
+        echo "<p>console.error('Session ID not set. User must be logged in to comment.');</p>";
+        header("Location: login.php");
     }
 
     $userId = $_SESSION['id'];
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_comment'])) {
         $stmt = $conn->prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)");
         if ($stmt === false) {
             echo "<script>console.error('Prepare statement failed: " . htmlspecialchars(json_encode($conn->error)) . "');</script>";
-            exit; // Or handle this scenario appropriately
+            exit;
         }
 
         $stmt->bind_param("iis", $postId, $userId, $commentContent);
@@ -82,6 +82,7 @@ if (isset($_GET['id'])) {
         ?>
         
         <div class="post">
+        
             <div style="display: flex;">
                 <div class="vote-buttons">
                     <button class="upvote-button" data-post-id="<?php echo $post['id']; ?>">&#8679;</button>
@@ -95,15 +96,36 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
-            <p class="post-text">
-                <?php echo nl2br(htmlspecialchars($post['content'])); ?>
-            </p>
+            
+            <?php                
+                // Assuming $post['content'] contains the problematic URL
+                $processed_content = $post['content'];
+
+                // Decode HTML entities and remove backslashes
+                $processed_content = html_entity_decode($processed_content);
+                $processed_content = stripslashes($processed_content);
+                $processed_content = str_replace('rn', '', $processed_content);
+
+                // Display the processed content
+                echo "<div class='post-text'>" . $processed_content . "</div>";
+
+            ?>
+
+            
+        <?php
+            if (isset($_SESSION['id']) && $_SESSION['id'] == $post['user_id']) {
+                echo '<form action="ddl/deletePost.php" method="POST" onsubmit="return confirmDeletion();">';
+                echo '<input type="hidden" name="postId" value="' . $post['id'] . '">';
+                echo '<button type="submit" name="delete_post" id="showStats">Delete</button>';
+                echo '</form>';
+            }
+        ?>
         </div>
 
 
         <div class="comments">
         <form action="" method="POST">
-            <textarea id="comment-box" name="comment" rows="4" cols="50" placeholder="Leave a Comment"></textarea>
+            <textarea id="comment-box" name="comment" rows="4" cols="50" placeholder="Leave a Comment" required></textarea>
             <input type="hidden" name="postId" value="<?php echo $postId; ?>">
             <button type="submit" name="submit_comment">Post Comment</button>
         </form>
@@ -150,7 +172,11 @@ if (isset($_GET['id'])) {
 $conn->close();
 ?>
 
-
+<script>
+    function confirmDeletion() {
+        return confirm("Are you sure you want to delete this post?");
+    }
+ </script>
 <script src="./js/votelogic.js"></script>
 
 </body>

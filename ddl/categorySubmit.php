@@ -1,6 +1,9 @@
 <?php
 session_start();
 include './db_connect.php';
+if(!isset($_SESSION['loggedin'])){
+    header("Location: ../login.php");
+}
 if (isset($_POST['submitCategory'])) {
     $categoryName = $conn->real_escape_string($_POST['categoryName']);
     $categoryDescription = $conn->real_escape_string($_POST['categoryDescription']);

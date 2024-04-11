@@ -1,6 +1,6 @@
 <?php 
 session_start();
-?>
+?>            
 <!DOCTYPE html>
 <html>
     <head>
@@ -8,22 +8,21 @@ session_start();
         <title>Just Buzzin</title>
         <link rel="stylesheet" href="css/style-sheet.css" />
         <script src="./js/headerfootermanager.js"></script>
-        
     </head>
 
     <body>
         <div class="login-page-container">
-        <form method = "POST" action="./ddl/epDDL.php" enctype="multipart/form-data">
+        <form method = "POST" action="./ddl/epDDL.php" >
             <fieldset class="form">
                 <legend>Edit My Account</legend>
                 <p>
-                    <label><img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></label>
+                <label><img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></label>
                     <input type="file" name="newpic" class="level-1-button"/>
                     <p>Choose your new profile picture above</p>
                 </p>
                 <p>
                     <label>Edit email: </label>
-                    <input type="email" name="email" placeholder="Enter the current or new email for your account"/>
+                    <input type="email" name="email" placeholder="Enter the current or new email for your account" required/>
                 </p>
                 <p>
                     <label>Change password: </label>
@@ -44,8 +43,9 @@ session_start();
             </fieldset>
         </form>
         </div>
+        <div class="edit-prof-bottom-buttons">
         <a href="home.php"><button class="level-1-button">Home</button></a>
         <a href="profile.php"><button class="level-2-button">Back</button></a>
-
+</div>
     </body>
 </html>
