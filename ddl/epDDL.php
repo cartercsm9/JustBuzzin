@@ -15,6 +15,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Initial setup
 $user = $_SESSION['username'];
+$id = $_SESSION['id'];
 $emailToUpdate = $_POST['email'] ?? null;
 $newDisplayName = $_POST['displayName'] ?? null;
 $newPassword = $_POST['password'] ?? null;
@@ -26,24 +27,34 @@ $conn->begin_transaction();
 
 try {
     // Update profile picture if a new one is uploaded
+    // Check if a new profile picture is uploaded and process it
     if (isset($_FILES['newpic']) && $_FILES['newpic']['error'] === UPLOAD_ERR_OK) {
-        $tmpName = $_FILES['newpic']['tmp_name'];
-        $imageType = $_FILES['newpic']['type'];
-        $imageData = file_get_contents($tmpName);
+        // Validate the image file (consider size, type, etc.)
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $imageType = finfo_file($fileInfo, $_FILES['newpic']['tmp_name']);
 
-        if ($imageData === false) {
-            throw new Exception("Error reading the file.");
+        if (strpos($imageType, 'image/') === 0) {
+            $tmpName = $_FILES['newpic']['tmp_name'];
+            $imageData = file_get_contents($tmpName);
+
+            if ($imageData === false) {
+                throw new Exception("Error reading the file.");
+            }
+
+            $imageQuery = "UPDATE users SET profile_pic = ?, profile_pic_type = ? WHERE display_name = ?";
+            $imageStmt = $conn->prepare($imageQuery);
+            $null = NULL; // Placeholder for the blob
+            $imageStmt->bind_param('bss', $null, $imageType, $user);
+            $imageStmt->send_long_data(0, $imageData);
+
+            if (!$imageStmt->execute()) {
+                throw new Exception("Failed to update profile picture.");
+            }
+        } else {
+            throw new Exception("Uploaded file is not an image.");
         }
 
-        $imageQuery = "UPDATE users SET profile_pic = ?, profile_pic_type = ? WHERE display_name = ?";
-        $imageStmt = $conn->prepare($imageQuery);
-        $null = NULL; // Placeholder for the blob
-        $imageStmt->bind_param('bss', $null, $imageType, $user);
-        $imageStmt->send_long_data(0, $imageData);
-
-        if (!$imageStmt->execute()) {
-            throw new Exception("Failed to update profile picture: " . $imageStmt->error);
-        }
+        finfo_close($fileInfo);
     }
 
     // Prepare the base query for other user info updates
@@ -56,12 +67,14 @@ try {
         $query .= "email = ?, ";
         $params[] = $emailToUpdate;
         $types .= "s";
+        $_SESSION['email'] = $emailToUpdate;
     }
 
     if ($newDisplayName) {
         $query .= "display_name = ?, ";
         $params[] = $newDisplayName;
         $types .= "s";
+        $_SESSION['username'] = $newDisplayName;
     }
 
     if ($newPassword && $newPassword === $newPasswordTest) {
@@ -75,8 +88,8 @@ try {
 
     // Finalize and execute the query for user info updates if there are changes
     if (!empty($types)) {
-        $query = rtrim($query, ", ") . " WHERE display_name = ?";
-        $params[] = $user;
+        $query = rtrim($query, ", ") . " WHERE id = ?";
+        $params[] = $id;
         $types .= "i";
 
         $stmt = $conn->prepare($query);
