@@ -312,26 +312,25 @@ legend  {
     text-align: center;
 }
 
-/*login page CSS*/
-.login-page-container  {
-    background-color: white;
-    padding: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 20px;
-    margin-top: 100px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 30%;
-    height: 75%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*register page CSS*/
+
+
+/*This is the main container for the register page*/
 .register-page-container  {
     background-color: white;
     padding: 20px;
@@ -345,8 +344,243 @@ legend  {
     justify-content: center;
     flex-direction: column;
     width: 30%;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
 }
+/*This is just the text at the top of the registration form (Orange Text)*/
+.register-form-header   {
+    color: rgb(237, 170, 65);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 140%;
+    font-weight: bold;
+}
+/*This is the container for the actual form section of the website.*/
+.form-register  {
+    font-family: Helvetica, Arial;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: rgb(235,235,235);
+    border-radius: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+/*This is the styling for each individual input element*/
+.register-form-input input{
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+    transition: padding 0.3s ease, background-color 1s ease;
+}
+
+/*This alters the input elements when they are being hovered over*/
+.register-form-input input:hover{
+    background-color:white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/*This modifies the placeholder text of the input fields on the registration page*/
+/*for the text input placeholder*/
+.register-form-input input[type=text]::placeholder {
+    color: black;
+    font-family: Helvetica;
+}
+/*for the email input placeholder*/
+.register-form-input input[type=email]::placeholder {
+    color: black;
+    font-family: Helvetica;
+
+}
+/*for the password input placeholder*/
+.register-form-input input[type=password]::placeholder {
+    color: black;
+    font-family: Helvetica;
+
+}
+/*For some reason, the placeholder text for the date field does not change properly*/
+.register-form-input input[type=date]::placeholder {
+    color: black;
+    font-family: Helvetica;
+
+}
+
+/*This just alters the placement of the bottom set of buttons on the register page*/
+.register-form-button-bottom{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/*This just alters the placement of the top set of buttons on the register page*/
+.register-form-button-top{
+    display: flex;
+    justify-content: space-between;
+    gap: 140px;
+    margin-top: 20px;
+}
+
+/*This is the container for the buzzin logo on the registration page*/
+.register-form-image{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    
+}
+/*this modifies the image size for the registration page*/
+.register-form-image img{
+    width: 150px;
+    height: auto;
+}
+
+/*END OF REGISTRATION STYLING*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*LOGIN PAGE STYLING*/
+
+
+/*This is the main container for the login page*/
+.login-page-container  {
+    background-color: white;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-top: 100px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 30%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+/*This is just the text at the top of the login form (Orange Text)*/
+.login-form-header   {
+    color: rgb(237, 170, 65);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 140%;
+    font-weight: bold;
+}
+/*This is the container for the actual form section of the login page.*/
+.form-login  {
+    font-family: Helvetica, Arial;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: rgb(235,235,235);
+    border-radius: 30px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+/*This is the styling for each individual input element*/
+.login-form-input input{
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+    transition: padding 0.3s ease, background-color 1s ease;
+}
+
+/*This alters the input elements when they are being hovered over*/
+.login-form-input input:hover{
+    background-color:white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/*This modifies the placeholder text of the input fields on the login page*/
+/*this targets the password input field*/
+.login-form-input input[type=password]::placeholder {
+    color: black;
+    font-family: Helvetica;
+
+}
+/*this targets the text type input*/
+.login-form-input input[type=text]::placeholder {
+    color: black;
+    font-family: Helvetica;
+
+}
+
+/*This just alters the placement of the bottom set of buttons on the register page*/
+.login-form-button-bottom{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/*This just alters the placement of the top set of buttons on the login page*/
+.login-form-button-top{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/*This is the container for the buzzin logo on the login page*/
+.login-form-image{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    
+}
+/*this modifies the image size for the login page*/
+.login-form-image img{
+    width: 150px;
+    height: auto;
+}
+
+.login-form-bottom-text{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    margin: 30px;
+}
+
+.login-form-bottom-text a{
+   color: black;
+   text-decoration: none;
+   transition: font-size 0.3s ease, color 0.3s ease;
+}
+
+.login-form-bottom-text a:hover{
+    color: rgb(237, 170, 65);
+    text-decoration: underline;
+    font-size: 105%;
+ }
+
+
+
+
+/*END OF LOGIN STYLING*/
+
+
 
 .profile-image  {
     border-radius: 50%;
@@ -386,8 +620,7 @@ legend  {
     text-decoration: none;
     user-select: none;
     -webkit-user-select: none;
-    transition: background-color 1s;
-    transition: color 1s;
+    transition: background-color 1s ease, color 1s ease;
     touch-action: manipulation;
 
 }

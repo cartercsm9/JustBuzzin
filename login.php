@@ -10,28 +10,32 @@
 
     <body>
         <div class="login-page-container">
-        <a href="home.php"><button class="level-2-button">Back</button></a>
-        <img src="imgs/logo_alpha.png" height="200em" width="200em">
-        <!-- This will be used to log in -->
-        <form name="login" method = "POST" action="./ddl/loginUser.php">
+            <div class="login-form-button-top">
+                <a href="home.php"><button class="level-2-button">Back</button></a>
+            </div>
+            <div class="login-form-image">
+                <img src="imgs/logo_alpha.png">
+            </div>
+        <!-- The same styling was used for the registration pages. -->
+        <form name="login" method = "POST" action="./ddl/loginUser.php" class="form-login">
             <fieldset class="form">
-                <legend>LOG IN</legend>
-                <p>
-                    <label>Email: </label>
-                    <input type="text" name="email" placeholder="Enter the email associated with your account" required/>
-                </p>
-                <p>
-                    <label>Password: </label>
-                    <input type="password" name="password" placeholder="Enter the password associated with your account" required/>
-                </p>
+                <div class="login-form-header">LOGIN</div>
+                <div class="login-form-input">
+                    <input type="text" name="email" placeholder="Enter email" required/>
+                </div>
+                <div class="login-form-input">
+                    <input type="password" name="password" placeholder="Enter password" required/>
+                </div>
                 
-                <p>
-                    <input type="submit" class="level-1-button"/>
+                <div class="login-form-button-bottom">
                     <input type="reset" class="level-1-button"/>
-                </p>
+                    <input type="submit" class="level-1-button"/>
+                </div>
             </fieldset>
         </form>
-        <a href="register.php"> Dont have an account? Click here to make one!</a>
-        </div>
+        <div class="login-form-bottom-text">
+            <a href="register.php"> Don't have a Buzzin Account?<br> Click here to make one!</a>
+        </div>    
+    </div>
     </body>
 </html>
