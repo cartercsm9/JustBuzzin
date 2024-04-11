@@ -12,7 +12,7 @@ session_start();
 
     <body>
         <div class="login-page-container">
-        <form method = "POST" action="./ddl/epDDL.php" >
+        <form method = "POST" action="./ddl/epDDL.php" enctype="multipart/form-data">
             <fieldset class="form">
                 <legend>Edit My Account</legend>
                 <p>
