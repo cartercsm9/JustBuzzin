@@ -9,6 +9,15 @@ body{
     margin: 0;
 }
 
+
+
+
+/*some of the header bar information is now unused*/
+
+
+
+
+
 #header-bar {
     position: fixed;
     top: 20px;
@@ -61,7 +70,7 @@ body{
 }
 
 
-/*Search Bar styling*/
+/*Search Bar styling
 .search-bar {
     width: 100%;
     height: 100%;
@@ -71,7 +80,7 @@ body{
     align-items: center;
     border-radius: 50px;
     padding: 20px 10px;
-    /*flex-direction: row;*/
+    /*flex-direction: row;
     justify-content: center;
 }
 
@@ -106,6 +115,8 @@ body{
   
   
   }
+
+  */
 
 ::placeholder   {
     color: grey;
@@ -264,6 +275,168 @@ body{
 legend  {
     text-align: center;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*All Header Bar Styling*/
+
+
+/*Main background Contariner for the Header Bar Div*/
+.header-bar {
+    position: fixed;
+    top: 0;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 95%;
+    height: 100px;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px 0 15px;
+    z-index: 100;
+}
+
+/*set the logo div to sit on the left side of the div*/
+.header-bar-logo{
+    margin-right: auto;
+}
+
+/*Styles the image within the logo div*/
+.header-bar-logo img{
+    width: 110px; 
+    height: auto; 
+    margin-right: 0;
+}
+
+.header-bar-logo img:hover{
+    transform: translate(-2px, -3px);
+}
+
+
+.header-bar-user-icon{
+    margin-left: auto;
+}
+
+.header-bar-user-icon img{
+    width: 80px;
+    height: 80px;
+    margin: auto auto auto auto;
+    border-radius: 50%;
+}
+
+
+.search-bar {
+    margin-left: auto;
+    height: 30px;
+    width: 100%;
+    margin-right: 20px;
+    margin-left: 10px;
+    background: rgba(237, 170, 65);
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 20px 10px;
+    /*flex-direction: row;*/
+    justify-content: center;
+}
+
+
+.search-form-input{
+    background: transparent;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg>');
+    background-size: contain; /* Ensure the SVG image fits within the input field */
+    background-repeat: no-repeat; /* Prevent the SVG image from repeating */
+    padding-left: 40px;
+    flex: 1;
+    justify-content: left;
+    border: 1;
+    outline: none;
+    border:none;
+    padding: 30px, 30px;
+    font-size: 20px;
+    color: rgb(256,256,256);
+}
+
+
+.search-bar form{
+    background: transparent;
+    flex: 1;
+    justify-content: left;
+    border: 1;
+    outline: none;
+    border:none;
+    padding: 30px, 30px;
+    font-size: 20px;
+    color: rgb(256,256,256);
+}
+
+.search-form  {
+    text-align: left;
+}
+
+
+.search-bar-button  {
+    background: none;
+    outline: none;
+    border: none;
+    margin-left: auto;
+}
+
+.level-2-button-header {
+    background-color: rgb(235,235,235);
+    width: 200px;
+    border-radius: 20px;
+    margin-right: 20px;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 18px;
+    font-family: helvetica;
+    color: rgb(237, 170, 65);
+    padding: 20px 20px 20px 20px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 1s;
+    transition: color 1s;
+    touch-action: manipulation;
+    }
+    
+    .level-2-button-header:hover {
+    background-color:rgb(237, 170, 65);
+    color: white;
+    }
+    
+    .level-2-button-header:focus,
+    .level-2-button-header:active {
+    transition: none;
+    transform: translate(2px, 2px);
+    }
+
+
+
+
+/*This is the end of the header bar styling*/
+
+
 
 
 
@@ -725,3 +898,5 @@ body {
 legend {
     text-align: center;
 }
+
+

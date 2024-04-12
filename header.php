@@ -14,21 +14,19 @@ if (isset($_SESSION['loggedin'])) {
 ?>
 
 
-<div id="header-bar">
-    <form action="home.php" method="get">
-    <nav>
-        <ul class="items">
-            <img src="imgs/logo_alpha.png" id="buzzin">
-            <div class="search-bar">
-            <input type="text" placeholder="Search Posts" name="search">
-            <button type="submit" class="search-button"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
-            </div>
-            <button type="button" class="level-2-button" id="new-post">New Post</button>
-            <a href="<?php echo $profileLink; ?>" style="width:100px; margin:0px;"><img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture" class="profile-image"></a>
-        </ul>
-    </nav>
-    </form>
+<div class="header-bar">
+    <div class="header-bar-logo">
+        <img src="imgs/logo_alpha.png">
+    </div>
+    <div class="search-bar">
+        <form action="home.php" method="get" class="search-form">
+            <input type="text" name="search" class="search-form-input">
+            <button type="submit" class="search-bar-button"></button>
+        </form>
+    </div>
+    <button type="button" class="level-2-button-header" id="new-post">New Post</button>
+    <div class="header-bar-user-icon"><a href="<?php echo $profileLink; ?>" style="width:100px; margin:0px;"><img src="ddl/displayProfilePic.php?displayImage=true" alt="Profile Picture"></a></div>
+
 </div>
 
 <script>
